@@ -2,187 +2,198 @@
 
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
-import { Calendar, Bell, ArrowRight, ChevronRight, BookOpen, Award, Users } from "lucide-react";
+import { Calendar, Bell, ArrowRight, ChevronRight, BookOpen, Award } from "lucide-react";
+
+type Locale = "uz" | "ru" | "en" | "tr";
 
 const NEWS = [
   {
     id: 1,
-    category: { uz: "Yangilik", ru: "Новости", en: "News", tr: "Haber" },
-    categoryColor: "bg-blue-100 text-blue-700",
-    date: "2024-12-15",
-    icon: <BookOpen size={14} />,
-    title: {
-      uz: "2024-2025 o'quv yili uchun yangi elektron resurslar qo'shildi",
-      ru: "Добавлены новые электронные ресурсы на 2024-2025 учебный год",
-      en: "New e-resources added for 2024-2025 academic year",
-      tr: "2024-2025 akademik yılı için yeni e-kaynaklar eklendi",
-    },
-    excerpt: {
-      uz: "Barcha kafedralar uchun 500 dan ortiq yangi elektron darslik va qo'llanmalar yuklab qo'yildi.",
-      ru: "Загружено более 500 новых электронных учебников и пособий для всех кафедр.",
-      en: "Over 500 new e-textbooks and manuals uploaded for all departments.",
-      tr: "Tüm bölümler için 500'den fazla yeni e-ders kitabı ve kılavuz yüklendi.",
-    },
+    catUz: "Yangilik", catRu: "Новость", catEn: "News", catTr: "Haber",
+    catColor: "bg-blue-100 text-blue-700",
+    date: "2026-06-12",
+    titleUz: "ATMU Smart UniLibrary platformasi test rejimida muvaffaqiyatli ishga tushirildi",
+    titleRu: "Платформа ATMU Smart UniLibrary успешно запущена в тестовом режиме",
+    titleEn: "ATMU Smart UniLibrary platform successfully launched in testing mode",
+    titleTr: "ATMU Smart UniLibrary platformu test modunda başarıyla başlatıldı",
+    excerptUz: "Platforma talabalar va o'qituvchilar bilan sinov rejimida ishlatilmoqda. Barcha kafedralar elektron resurs bazasini shakllantirish boshladi.",
+    excerptRu: "Платформа тестируется со студентами и преподавателями. Все кафедры приступили к формированию электронной ресурсной базы.",
+    excerptEn: "The platform is being tested with students and teachers. All departments have started forming their electronic resource base.",
+    excerptTr: "Platform öğrenciler ve öğretmenlerle test edilmektedir. Tüm bölümler elektronik kaynak tabanı oluşturmaya başladı.",
     featured: true,
+    icon: <BookOpen size={13} />,
   },
   {
     id: 2,
-    category: { uz: "E'lon", ru: "Объявление", en: "Notice", tr: "Duyuru" },
-    categoryColor: "bg-amber-100 text-amber-700",
-    date: "2024-12-10",
-    icon: <Bell size={14} />,
-    title: {
-      uz: "O'qish zali ish vaqti o'zgartirildi",
-      ru: "Изменено время работы читального зала",
-      en: "Reading room working hours changed",
-      tr: "Okuma salonu çalışma saatleri değiştirildi",
-    },
-    excerpt: {
-      uz: "Yanvar oyidan boshlab o'qish zali du-shanba dan juma ga 8:00 dan 20:00 gacha ishlaydi.",
-      ru: "С января читальный зал работает с понедельника по пятницу с 8:00 до 20:00.",
-      en: "From January, the reading room is open Monday to Friday 8:00 to 20:00.",
-      tr: "Ocak'tan itibaren okuma salonu Pazartesi-Cuma 8:00-20:00 açık.",
-    },
+    catUz: "E'lon", catRu: "Объявление", catEn: "Notice", catTr: "Duyuru",
+    catColor: "bg-amber-100 text-amber-700",
+    date: "2026-06-08",
+    titleUz: "Kafedralar elektron resurs bazasini shakllantirish boshlandi",
+    titleRu: "Начато формирование электронной базы ресурсов кафедр",
+    titleEn: "Formation of the electronic resource base of departments has begun",
+    titleTr: "Bölümlerin elektronik kaynak tabanının oluşturulmasına başlandı",
+    excerptUz: "Barcha 6 kafedra o'z o'quv-uslubiy materiallarini Smart UniLibrary platformasiga yuklash jarayonini boshladi.",
+    excerptRu: "Все 6 кафедр начали загрузку своих учебно-методических материалов на платформу Smart UniLibrary.",
+    excerptEn: "All 6 departments began uploading their educational materials to the Smart UniLibrary platform.",
+    excerptTr: "6 bölümün tamamı eğitim materyallerini Smart UniLibrary platformuna yüklemeye başladı.",
     featured: false,
+    icon: <Award size={13} />,
   },
   {
     id: 3,
-    category: { uz: "Tadbir", ru: "Мероприятие", en: "Event", tr: "Etkinlik" },
-    categoryColor: "bg-purple-100 text-purple-700",
-    date: "2024-12-05",
-    icon: <Award size={14} />,
-    title: {
-      uz: "Eng ko'p o'qigan talabalar mukofotlandi",
-      ru: "Наиболее активные читатели получили награды",
-      en: "Most active readers awarded",
-      tr: "En çok okuyan öğrenciler ödüllendirildi",
-    },
-    excerpt: {
-      uz: "2024 yil davomida kutubxonadan eng ko'p foydalangan 20 nafar talaba sovg'alar bilan taqdirlandi.",
-      ru: "20 студентов, наиболее активно использовавших библиотеку в 2024 году, получили призы.",
-      en: "20 students who used the library the most in 2024 were awarded prizes.",
-      tr: "2024 yılında kütüphaneyi en çok kullanan 20 öğrenci ödülle takdim edildi.",
-    },
+    catUz: "Xizmat", catRu: "Сервис", catEn: "Service", catTr: "Hizmet",
+    catColor: "bg-green-100 text-green-700",
+    date: "2026-06-05",
+    titleUz: "Elektron katalog va kitob band qilish xizmati joriy qilindi",
+    titleRu: "Введены электронный каталог и служба бронирования книг",
+    titleEn: "Electronic catalog and book reservation service introduced",
+    titleTr: "Elektronik katalog ve kitap rezervasyon hizmeti devreye alındı",
+    excerptUz: "Kutubxona fondidagi 8 420+ kitobni onlayn band qilish va qaytarish muddatini kuzatish imkoniyati yaratildi.",
+    excerptRu: "Создана возможность онлайн-бронирования и отслеживания сроков возврата 8420+ книг библиотечного фонда.",
+    excerptEn: "Online reservation and return deadline tracking for 8,420+ library books has been enabled.",
+    excerptTr: "Kütüphane fonundaki 8.420+ kitabın çevrimiçi rezervasyonu ve iade takibi mümkün hale getirildi.",
     featured: false,
+    icon: <BookOpen size={13} />,
   },
   {
     id: 4,
-    category: { uz: "Xizmat", ru: "Услуга", en: "Service", tr: "Hizmet" },
-    categoryColor: "bg-emerald-100 text-emerald-700",
-    date: "2024-11-28",
-    icon: <Users size={14} />,
-    title: {
-      uz: "AI Yordamchi xizmati ishga tushirildi",
-      ru: "Запущен сервис AI Ассистента",
-      en: "AI Assistant service launched",
-      tr: "AI Asistan hizmeti başlatıldı",
-    },
-    excerpt: {
-      uz: "Endi kutubxona AI yordamchisi orqali kitob va resurslarni tezda topishingiz mumkin.",
-      ru: "Теперь через ИИ-ассистента библиотеки можно быстро найти книги и ресурсы.",
-      en: "Now you can quickly find books and resources through the library AI assistant.",
-      tr: "Artık kütüphane AI asistanı aracılığıyla kitap ve kaynakları hızlıca bulabilirsiniz.",
-    },
+    catUz: "Xizmat", catRu: "Сервис", catEn: "Service", catTr: "Hizmet",
+    catColor: "bg-green-100 text-green-700",
+    date: "2026-06-01",
+    titleUz: "O'quv zali joylarini onlayn bron qilish imkoniyati yaratildi",
+    titleRu: "Создана возможность онлайн-бронирования мест в читальном зале",
+    titleEn: "Online booking of reading room seats has been introduced",
+    titleTr: "Okuma salonu yer rezervasyonu çevrimiçi olarak mümkün hale getirildi",
+    excerptUz: "Uch o'quv zalida jami 85 ta joy uchun onlayn bron qilish, QR check-in va joy xaritasi xizmati ishga tushirildi.",
+    excerptRu: "Запущена онлайн-бронь, QR-check-in и карта мест для 85 мест в трёх читальных залах.",
+    excerptEn: "Online booking, QR check-in and seat map launched for 85 seats across three reading rooms.",
+    excerptTr: "Üç okuma salonundaki 85 koltuk için çevrimiçi rezervasyon, QR check-in ve koltuk haritası başlatıldı.",
     featured: false,
+    icon: <Calendar size={13} />,
+  },
+  {
+    id: 5,
+    catUz: "Texnologiya", catRu: "Технология", catEn: "Technology", catTr: "Teknoloji",
+    catColor: "bg-purple-100 text-purple-700",
+    date: "2026-05-28",
+    titleUz: "AI kutubxonachi moduli sinovdan o'tkazilmoqda",
+    titleRu: "Модуль библиотекаря ИИ проходит тестирование",
+    titleEn: "AI librarian module is being tested",
+    titleTr: "AI kütüphaneci modülü test edilmektedir",
+    excerptUz: "Sun'iy intellekt asosidagi qidiruv tizimi kafedra materiallari, fanlar va kurs bo'yicha resurslarni aniqlab beradi.",
+    excerptRu: "Система поиска на основе ИИ находит ресурсы по материалам кафедр, дисциплинам и курсам.",
+    excerptEn: "AI-based search system identifies resources by department materials, subjects and courses.",
+    excerptTr: "Yapay zeka tabanlı arama sistemi bölüm materyalleri, dersler ve kurslara göre kaynakları belirler.",
+    featured: false,
+    icon: <Bell size={13} />,
   },
 ];
 
-const SECTION_LABELS: Record<string, Record<string, string>> = {
-  uz: { tag: "Yangiliklar", title: "So'nggi yangiliklar va e'lonlar", all: "Barchasini ko'rish" },
-  ru: { tag: "Новости", title: "Последние новости и объявления", all: "Смотреть все" },
-  en: { tag: "News", title: "Latest News & Announcements", all: "View all" },
-  tr: { tag: "Haberler", title: "Son haberler ve duyurular", all: "Tümünü gör" },
-};
-
-function formatDate(dateStr: string, locale: string) {
+function formatDate(dateStr: string, locale: Locale) {
   const d = new Date(dateStr);
-  return d.toLocaleDateString(
-    locale === "uz" ? "uz-UZ" : locale === "ru" ? "ru-RU" : locale === "tr" ? "tr-TR" : "en-US",
-    { day: "numeric", month: "long", year: "numeric" }
-  );
+  if (locale === "ru") return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+  if (locale === "en") return d.toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" });
+  if (locale === "tr") return d.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+  const months = ["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentabr","Oktabr","Noyabr","Dekabr"];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+const T = {
+  uz: { section_tag: "Yangiliklar va e'lonlar", title: "Yangiliklar", all: "Barcha yangiliklar", more: "Batafsil" },
+  ru: { section_tag: "Новости и объявления", title: "Новости", all: "Все новости", more: "Подробнее" },
+  en: { section_tag: "News & Announcements", title: "News", all: "All news", more: "Read more" },
+  tr: { section_tag: "Haberler ve Duyurular", title: "Haberler", all: "Tüm haberler", more: "Devamı" },
+};
+
 export default function AnnouncementsSection() {
-  const locale = useLocale() as "uz" | "ru" | "en" | "tr";
-  const s = SECTION_LABELS[locale] || SECTION_LABELS.uz;
+  const locale = useLocale() as Locale;
+  const L = T[locale] || T.uz;
+
+  const getTitle = (n: typeof NEWS[0]) => {
+    if (locale === "ru") return n.titleRu;
+    if (locale === "en") return n.titleEn;
+    if (locale === "tr") return n.titleTr;
+    return n.titleUz;
+  };
+
+  const getExcerpt = (n: typeof NEWS[0]) => {
+    if (locale === "ru") return n.excerptRu;
+    if (locale === "en") return n.excerptEn;
+    if (locale === "tr") return n.excerptTr;
+    return n.excerptUz;
+  };
+
+  const getCat = (n: typeof NEWS[0]) => {
+    if (locale === "ru") return n.catRu;
+    if (locale === "en") return n.catEn;
+    if (locale === "tr") return n.catTr;
+    return n.catUz;
+  };
+
   const featured = NEWS[0];
   const rest = NEWS.slice(1);
 
   return (
-    <section className="py-14 bg-white border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Section header */}
+    <section className="py-14 bg-[#F5F7FA]">
+      <div className="max-w-[1280px] mx-auto px-4">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <div className="section-tag">
-              <Bell size={11} />
-              {s.tag}
+            <div className="section-tag mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#1457A8]" />
+              {L.section_tag}
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">{s.title}</h2>
-            <div className="section-divider" />
+            <h2 className="text-[#061B3A] text-2xl lg:text-3xl font-bold">{L.title}</h2>
+            <div className="section-divider mt-2" />
           </div>
-          <Link href="/news" className="flex items-center gap-1 text-sm text-[#1457A8] font-semibold hover:underline">
-            {s.all} <ChevronRight size={14} />
+          <Link href="/news" className="hidden sm:flex items-center gap-1.5 text-[#1457A8] text-sm font-semibold">
+            {L.all} <ArrowRight size={14} />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Featured large card */}
-          <div className="lg:col-span-1 news-card group cursor-pointer">
-            <div className="h-44 bg-gradient-to-br from-[#061B3A] to-[#1457A8] flex items-end p-5 relative overflow-hidden">
-              <div className="absolute inset-0 opacity-10" style={{backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E\")"}} />
-              <div className="relative">
-                <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full mb-2 ${featured.categoryColor}`}>
-                  {featured.icon}
-                  {featured.category[locale]}
-                </span>
-              </div>
+        <div className="grid lg:grid-cols-5 gap-5">
+          {/* Featured */}
+          <div className="lg:col-span-2 portal-card p-6 flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${featured.catColor}`}>
+                {featured.icon} {getCat(featured)}
+              </span>
+              <span className="flex items-center gap-1 text-gray-400 text-[11px]">
+                <Calendar size={11} />{formatDate(featured.date, locale)}
+              </span>
             </div>
-            <div className="p-5">
-              <div className="flex items-center gap-1.5 text-gray-400 text-xs mb-2">
-                <Calendar size={11} />
-                {formatDate(featured.date, locale)}
-              </div>
-              <h3 className="font-bold text-gray-900 text-base leading-snug mb-2 group-hover:text-[#1457A8] transition-colors">
-                {featured.title[locale]}
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
-                {featured.excerpt[locale]}
-              </p>
-              <div className="flex items-center gap-1 mt-4 text-[#1457A8] text-sm font-semibold">
-                {locale === "uz" ? "Batafsil" : locale === "ru" ? "Подробнее" : locale === "tr" ? "Devamı" : "Read more"}
-                <ArrowRight size={13} />
-              </div>
-            </div>
+            <h3 className="text-[#172033] font-bold text-base leading-snug mb-3 flex-1">
+              {getTitle(featured)}
+            </h3>
+            <p className="text-gray-500 text-[13px] leading-relaxed mb-5">
+              {getExcerpt(featured)}
+            </p>
+            <Link href="/news/1" className="flex items-center gap-1.5 text-[#1457A8] text-sm font-semibold">
+              {L.more} <ArrowRight size={13} />
+            </Link>
           </div>
 
-          {/* 3 smaller news cards */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            {rest.map((item) => (
-              <div key={item.id} className="news-card group cursor-pointer flex gap-4 p-4">
-                <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center flex-shrink-0 group-hover:from-blue-50 group-hover:to-indigo-100 transition-colors">
-                  <span className="text-2xl">
-                    {item.id === 2 ? "📅" : item.id === 3 ? "🏆" : "🤖"}
-                  </span>
+          {/* List */}
+          <div className="lg:col-span-3 space-y-3">
+            {rest.map((n) => (
+              <div key={n.id} className="portal-card p-4 flex gap-4 group cursor-pointer hover:border-[#1457A8]/30">
+                <div className="flex-shrink-0 flex flex-col items-center justify-center w-12 pt-0.5">
+                  <div className="text-[#1457A8] font-black text-lg leading-none">{new Date(n.date).getDate()}</div>
+                  <div className="text-gray-400 text-[10px] font-medium">
+                    {formatDate(n.date, locale).split(" ")[1]?.substring(0, 3)}
+                  </div>
                 </div>
+                <div className="w-px bg-gray-100 self-stretch flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${item.categoryColor}`}>
-                      {item.icon}
-                      {item.category[locale]}
-                    </span>
-                    <span className="text-gray-400 text-xs flex items-center gap-1">
-                      <Calendar size={10} />
-                      {formatDate(item.date, locale)}
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${n.catColor}`}>
+                      {n.icon} {getCat(n)}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-1 group-hover:text-[#1457A8] transition-colors line-clamp-2">
-                    {item.title[locale]}
+                  <h3 className="text-[#172033] font-semibold text-[13px] leading-snug group-hover:text-[#1457A8] transition-colors line-clamp-2">
+                    {getTitle(n)}
                   </h3>
-                  <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">
-                    {item.excerpt[locale]}
-                  </p>
                 </div>
+                <ChevronRight size={14} className="flex-shrink-0 text-gray-300 group-hover:text-[#1457A8] mt-1 transition-colors" />
               </div>
             ))}
           </div>
