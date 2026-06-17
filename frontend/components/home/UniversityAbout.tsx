@@ -1,158 +1,91 @@
 "use client";
-
 import { useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 type Locale = "uz" | "ru" | "en" | "tr";
+const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
-const T: Record<Locale, { title: string; text: string; btn: string }> = {
-  uz: {
-    title: "ATMU haqida",
-    text: "Axborot texnologiyalari va menejment universiteti raqamli texnologiyalar, boshqaruv, iqtisodiyot, pedagogika va zamonaviy ta'lim metodlarini uyg'unlashtirgan holda malakali kadrlar tayyorlashga yo'naltirilgan oliy ta'lim muassasasidir. Universitetda o'quv jarayoni, ilmiy faoliyat va elektron resurslardan foydalanish bosqichma-bosqich raqamli platformalar orqali boshqariladi. Smart UniLibrary platformasi kafedralarda yaratilgan o'quv-uslubiy materiallar, elektron darsliklar, laboratoriya ishlari va ilmiy maqolalar bilan ishlash jarayonini yagona muhitda tashkil etadi.",
-    btn: "Batafsil o'qish",
-  },
-  ru: {
-    title: "Об АТМУ",
-    text: "Университет информационных технологий и менеджмента — высшее учебное заведение, ориентированное на подготовку квалифицированных кадров в области цифровых технологий, управления, экономики и современных методов образования. Учебный процесс, научная деятельность и использование электронных ресурсов поэтапно управляются через цифровые платформы. Платформа Smart UniLibrary организует работу с учебно-методическими материалами, электронными учебниками, лабораторными работами и научными статьями в единой среде.",
-    btn: "Подробнее",
-  },
-  en: {
-    title: "About ATMU",
-    text: "The University of Information Technologies and Management is a higher education institution focused on training qualified professionals in the fields of digital technologies, management, economics and modern educational methods. The educational process, scientific activity and use of electronic resources are managed step by step through digital platforms. The Smart UniLibrary platform organizes work with educational materials, e-textbooks, laboratory works and scientific articles in a unified environment.",
-    btn: "Learn more",
-  },
-  tr: {
-    title: "ATMU Hakkında",
-    text: "Bilgi Teknolojileri ve Yönetim Üniversitesi, dijital teknolojiler, yönetim, ekonomi ve modern eğitim yöntemleri alanında nitelikli uzmanlar yetiştirmeye odaklanmış bir yükseköğretim kurumudur. Eğitim süreci, bilimsel faaliyet ve elektronik kaynaklardan yararlanma dijital platformlar aracılığıyla yönetilmektedir.",
-    btn: "Devamını oku",
-  },
-};
+function AnimNum({ target, dur = 1800 }: { target: number; dur?: number }) {
+  const [cur, setCur] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) {
+        started.current = true;
+        const s = Date.now();
+        const tick = () => {
+          const p = Math.min((Date.now() - s) / dur, 1);
+          setCur(Math.round((1 - Math.pow(1 - p, 3)) * target));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.3 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [target, dur]);
+  return <span ref={ref}>{cur.toLocaleString()}</span>;
+}
 
 const STATS = [
-  {
-    icon: (
-      <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-        <circle cx="16" cy="10" r="5" stroke="white" strokeWidth="1.8"/>
-        <path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
-    value: "2 318+",
-    uz: "Talabalar", ru: "Студентов", en: "Students", tr: "Öğrenci",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-        <rect x="6" y="8" width="20" height="16" rx="2" stroke="white" strokeWidth="1.8"/>
-        <path d="M11 8V6M21 8V6" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-        <path d="M10 16h12M10 20h8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
-    value: "126+",
-    uz: "O'qituvchilar", ru: "Преподаватели", en: "Faculty", tr: "Öğretim Üyeleri",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-        <path d="M8 6h16v20H8z" stroke="white" strokeWidth="1.8"/>
-        <path d="M12 10h8M12 14h8M12 18h5" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
-    value: "48",
-    uz: "Ta'lim yo'nalishlari", ru: "Направления", en: "Programs", tr: "Program",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-        <path d="M16 4L28 10V22L16 28L4 22V10Z" stroke="white" strokeWidth="1.8"/>
-        <path d="M16 4V28M4 10L28 22M28 10L4 22" stroke="white" strokeWidth="1.8" strokeOpacity="0.4"/>
-      </svg>
-    ),
-    value: "6",
-    uz: "Kafedralar", ru: "Кафедры", en: "Departments", tr: "Bölüm",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-        <circle cx="16" cy="16" r="10" stroke="white" strokeWidth="1.8"/>
-        <path d="M16 10v6l4 3" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-      </svg>
-    ),
-    value: "1 247+",
-    uz: "Elektron resurslar", ru: "Эл. ресурсов", en: "E-Resources", tr: "E-Kaynak",
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 32 32" className="w-7 h-7" fill="none">
-        <path d="M6 8h20M6 14h20M6 20h14" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-        <rect x="4" y="4" width="24" height="24" rx="3" stroke="white" strokeWidth="1.8"/>
-      </svg>
-    ),
-    value: "8 420+",
-    uz: "Kutubxona fondi", ru: "Фонд библиотеки", en: "Library Fund", tr: "Kütüphane Fonu",
-  },
+  { val: 2318, suffix: "+", label: { uz: "Talabalar", ru: "Студентов", en: "Students", tr: "Öğrenci" },
+    icon: <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> },
+  { val: 126, suffix: "+", label: { uz: "O'qituvchilar", ru: "Преподавателей", en: "Faculty", tr: "Öğretim" },
+    icon: <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg> },
+  { val: 48, suffix: "", label: { uz: "Fanlar", ru: "Дисциплин", en: "Subjects", tr: "Dersler" },
+    icon: <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> },
+  { val: 6, suffix: "", label: { uz: "Kafedralar", ru: "Кафедр", en: "Departments", tr: "Bölümler" },
+    icon: <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
+  { val: 1247, suffix: "+", label: { uz: "Elektron resurslar", ru: "Эл. ресурсов", en: "E-Resources", tr: "E-Kaynak" },
+    icon: <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> },
+  { val: 8420, suffix: "+", label: { uz: "Kutubxona fondi", ru: "Книжный фонд", en: "Library Fund", tr: "Kitap Fonu" },
+    icon: <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg> },
 ];
+
+const DESC = {
+  uz: "Axborot texnologiyalari va menejment universiteti raqamli texnologiyalar, boshqaruv, iqtisodiyot, pedagogika va zamonaviy ta'lim metodlarini uyg'unlashtirgan holda malakali kadrlar tayyorlashga yo'naltirilgan oliy ta'lim muassasasidir.",
+  ru: "Университет информационных технологий и менеджмента — высшее учебное заведение, ориентированное на подготовку квалифицированных кадров посредством интеграции цифровых технологий, управления, экономики, педагогики и современных методов обучения.",
+  en: "The University of Information Technology and Management is a higher education institution aimed at training qualified specialists by integrating digital technologies, management, economics, pedagogy and modern teaching methods.",
+  tr: "Bilgi Teknolojileri ve Yönetim Üniversitesi; dijital teknolojiler, yönetim, ekonomi, pedagoji ve modern öğretim yöntemlerini entegre ederek nitelikli uzmanlar yetiştirmeye yönelik bir yükseköğretim kurumudur.",
+};
 
 export default function UniversityAbout() {
   const locale = useLocale() as Locale;
-  const L = T[locale] || T.uz;
-
-  const getLabel = (s: typeof STATS[0]) => {
-    if (locale === "ru") return s.ru;
-    if (locale === "en") return s.en;
-    if (locale === "tr") return s.tr;
-    return s.uz;
-  };
 
   return (
-    <section style={{ background: "linear-gradient(135deg, #061B3A 0%, #0B3D73 60%, #1058A0 100%)" }}>
-      <div className="max-w-[1280px] mx-auto px-4 py-14">
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-14">
-          <div>
-            <div className="text-yellow-400/70 text-[11px] font-bold uppercase tracking-widest mb-3">ATMU</div>
-            <h2 className="text-white text-3xl lg:text-4xl font-bold mb-5 leading-tight">
-              {L.title}
-            </h2>
-            <div className="w-12 h-0.5 bg-yellow-400/60 mb-6 rounded-full" />
-            <p className="text-white/65 text-[15px] leading-7 mb-7">
-              {L.text}
-            </p>
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 border border-yellow-400/50 text-yellow-300 hover:bg-yellow-400/10 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
-            >
-              {L.btn}
-              <ArrowRight size={14} />
-            </Link>
+    <section className="section-dark" style={{ padding: "80px 0" }}>
+      <div className="max-w-[1680px] mx-auto px-5 sm:px-8">
+        {/* Title */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <span className="w-8 h-px bg-[#e8a820]" />
+            <span className="text-[#e8a820] text-[11px] font-bold uppercase tracking-widest">
+              {locale === "uz" ? "Biz haqimizda" : locale === "ru" ? "О нас" : locale === "tr" ? "Hakkımızda" : "About Us"}
+            </span>
+            <span className="w-8 h-px bg-[#e8a820]" />
           </div>
-          <div className="hidden lg:flex items-center justify-center">
-            <div className="relative w-[300px] h-[300px]">
-              <div className="absolute inset-0 rounded-2xl border border-white/10" style={{ background: "rgba(255,255,255,0.04)" }} />
-              <div className="absolute inset-6 rounded-xl border border-yellow-400/20" style={{ background: "rgba(214,168,79,0.04)" }} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg viewBox="0 0 200 200" className="w-40 h-40 opacity-25" fill="none">
-                  <path d="M100 10L190 55V145L100 190L10 145V55Z" stroke="#D6A84F" strokeWidth="2"/>
-                  <path d="M100 30L170 65V135L100 170L30 135V65Z" stroke="#1457A8" strokeWidth="1.5"/>
-                  <path d="M100 50L150 75V125L100 150L50 125V75Z" stroke="#D6A84F" strokeWidth="1" strokeDasharray="4 4"/>
-                  <circle cx="100" cy="100" r="15" stroke="#D6A84F" strokeWidth="1.5"/>
-                  <text x="100" y="105" textAnchor="middle" fill="#D6A84F" fontSize="14" fontWeight="bold" fontFamily="Arial">AT</text>
-                </svg>
-              </div>
-            </div>
-          </div>
+          <h2 style={{ color: "#fff", fontFamily: "'Georgia',serif", fontSize: "clamp(24px,3vw,40px)", fontWeight: 800, marginBottom: "20px" }}>
+            {locale === "uz" ? "ATMU haqida" : locale === "ru" ? "Об АТМУ" : locale === "tr" ? "ATMU Hakkında" : "About ATMU"}
+          </h2>
+          <p style={{ color: "rgba(255,255,255,.6)", maxWidth: "780px", margin: "0 auto", lineHeight: 1.75, fontSize: "clamp(13px,1.1vw,16px)" }}>
+            {DESC[locale] || DESC.uz}
+          </p>
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-0 border border-white/10 rounded-2xl overflow-hidden">
           {STATS.map((s, i) => (
             <div
               key={i}
-              className="flex flex-col items-center text-center p-5 rounded-xl border border-white/10 hover:border-yellow-400/30 transition-all"
-              style={{ background: "rgba(255,255,255,0.04)" }}
+              className={`flex flex-col items-center text-center px-4 py-8 ${i < STATS.length - 1 ? "border-r border-white/08" : ""}`}
+              style={{ background: i % 2 === 0 ? "rgba(255,255,255,.03)" : "transparent" }}
             >
-              <div className="mb-3 opacity-80">{s.icon}</div>
-              <div className="text-white font-bold text-2xl stat-counter mb-1">{s.value}</div>
-              <div className="text-white/50 text-[11px] leading-tight">{getLabel(s)}</div>
+              <div className="text-[#e8a820]/70 mb-3">{s.icon}</div>
+              <div className="text-white font-black mb-1.5" style={{ fontSize: "clamp(24px,2.5vw,36px)", lineHeight: 1 }}>
+                <AnimNum target={s.val} />{s.suffix}
+              </div>
+              <div className="text-white/45 text-[11px] font-medium uppercase tracking-wide leading-tight">{t(s.label, locale)}</div>
             </div>
           ))}
         </div>

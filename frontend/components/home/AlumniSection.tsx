@@ -1,176 +1,115 @@
 "use client";
-
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type Locale = "uz" | "ru" | "en" | "tr";
-
-const T: Record<Locale, Record<string, string>> = {
-  uz: {
-    tag: "Bitiruvchilar",
-    title: "Faxriy bitiruvchilar",
-    subtitle: "Universitet bitiruvchilari ta'lim, boshqaruv, axborot texnologiyalari va tadbirkorlik sohalarida faoliyat yuritmoqda.",
-  },
-  ru: {
-    tag: "Выпускники",
-    title: "Почётные выпускники",
-    subtitle: "Выпускники университета работают в сферах образования, управления, информационных технологий и предпринимательства.",
-  },
-  en: {
-    tag: "Alumni",
-    title: "Honorary Alumni",
-    subtitle: "University alumni work in the fields of education, management, information technologies and entrepreneurship.",
-  },
-  tr: {
-    tag: "Mezunlar",
-    title: "Onursal Mezunlar",
-    subtitle: "Üniversite mezunları eğitim, yönetim, bilgi teknolojileri ve girişimcilik alanlarında çalışmaktadır.",
-  },
-};
+const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
 const ALUMNI = [
   {
-    initials: "NK",
-    nameUz: "Nodir Karimov", nameRu: "Нодир Каримов", nameEn: "Nodir Karimov", nameTr: "Nodir Karimov",
-    roleUz: "IT direktori, yirik texnologiya kompaniyasi", roleRu: "ИТ-директор, крупная IT-компания", roleEn: "IT Director, major tech company", roleTr: "BT Direktörü, büyük teknoloji şirketi",
-    quoteUz: "ATMU da olgan bilim va ko'nikmalar meni raqamli texnologiyalar sohasida professional sifatida shakllantirishda muhim rol o'ynadi.",
-    quoteRu: "Знания и навыки, полученные в АТМУ, сыграли важную роль в моём профессиональном становлении в сфере цифровых технологий.",
-    quoteEn: "The knowledge and skills gained at ATMU played an important role in shaping me as a professional in the field of digital technologies.",
-    quoteTr: "ATMU'da edindiğim bilgi ve beceriler, dijital teknolojiler alanında profesyonel olarak şekillenmemde önemli bir rol oynadı.",
-    color: "#1457A8",
-    year: "2019",
+    initials: "JT",
+    color: "#00579f",
+    name: { uz: "Jahongir Toshmatov", ru: "Джахонгир Тошматов", en: "Jahongir Toshmatov", tr: "Jahongir Toshmatov" },
+    role: { uz: "IT menejeri — Texnologiya kompaniyasi, 2022-yil bitiruvchi", ru: "IT-менеджер — технологическая компания, выпускник 2022", en: "IT Manager — Technology Company, 2022 Graduate", tr: "IT Müdürü — Teknoloji Şirketi, 2022 Mezunu" },
+    quote: { uz: "ATMU da olgan ta'limim va Smart UniLibrary tizimi orqali o'rgangan ko'nikmalarim bugungi kasbiy faoliyatimning poydevori bo'ldi. Elektron resurslar va AI qidiruv tizimi o'quv jarayonini tubdan yaxshiladi.", ru: "Образование в АТМУ и навыки, приобретённые через систему Smart UniLibrary, стали основой моей сегодняшней профессиональной деятельности. Электронные ресурсы и ИИ-поиск кардинально улучшили учебный процесс.", en: "The education I received at ATMU and the skills I learned through the Smart UniLibrary system became the foundation of my professional career. E-resources and AI search fundamentally improved the learning process.", tr: "ATMU'daki eğitimim ve Smart UniLibrary sistemi aracılığıyla öğrendiğim beceriler mesleki kariyerimin temelini oluşturdu." },
   },
   {
-    initials: "SM",
-    nameUz: "Sarvinoz Mirzayeva", nameRu: "Сарвиноз Мирзаева", nameEn: "Sarvinoz Mirzayeva", nameTr: "Sarvinoz Mirzayeva",
-    roleUz: "Ta'lim muassasasi direktori", roleRu: "Директор образовательного учреждения", roleEn: "Director of Educational Institution", roleTr: "Eğitim Kurumu Müdürü",
-    quoteUz: "Universitetdagi pedagogika va boshqaruv bo'yicha ta'lim menga zamonaviy ta'lim muassasasini boshqarishda mustahkam poydevor yaratdi.",
-    quoteRu: "Образование по педагогике и управлению в университете создало мне прочный фундамент для руководства современным образовательным учреждением.",
-    quoteEn: "Education in pedagogy and management at the university created a solid foundation for me to manage a modern educational institution.",
-    quoteTr: "Üniversitedeki pedagoji ve yönetim eğitimi, modern bir eğitim kurumunu yönetmem için sağlam bir temel oluşturdu.",
-    color: "#0E9F6E",
-    year: "2020",
+    initials: "MR",
+    color: "#8855cc",
+    name: { uz: "Malika Rahimova", ru: "Малика Рахимова", en: "Malika Rahimova", tr: "Malika Rahimova" },
+    role: { uz: "Ma'lumotlar tahlilchisi — Moliya sektori, 2021-yil bitiruvchi", ru: "Аналитик данных — финансовый сектор, выпускница 2021", en: "Data Analyst — Financial Sector, 2021 Graduate", tr: "Veri Analist — Finans Sektörü, 2021 Mezunu" },
+    quote: { uz: "Universitetdagi raqamli kutubxona tizimi orqali ilmiy adabiyotlarga erkin kirish imkonim bo'ldi. Bu mening tadqiqot ko'nikmalarimi rivojlantirishga katta hissa qo'shdi va magistratura dissertatsiyamni yozishda asosiy vosita bo'ldi.", ru: "Через университетскую цифровую библиотеку я получила свободный доступ к научной литературе. Это внесло большой вклад в развитие моих исследовательских навыков и стало главным инструментом при написании магистерской диссертации.", en: "The university's digital library gave me free access to academic literature. This greatly contributed to developing my research skills and became the main tool for writing my master's dissertation.", tr: "Üniversitenin dijital kütüphanesi aracılığıyla akademik literatüre serbest erişim elde ettim. Bu, araştırma becerilerimi geliştirmeme büyük katkı sağladı." },
   },
   {
-    initials: "RT",
-    nameUz: "Ravshan Toshmatov", nameRu: "Равшан Тошматов", nameEn: "Ravshan Toshmatov", nameTr: "Ravshan Toshmatov",
-    roleUz: "Tadbirkor, raqamli startap asoschisi", roleRu: "Предприниматель, основатель цифрового стартапа", roleEn: "Entrepreneur, digital startup founder", roleTr: "Girişimci, dijital startup kurucusu",
-    quoteUz: "Iqtisodiyot va menejment kafedrasi bergan bilimlar tadbirkorlik yo'lida o'zimga bo'lgan ishonchimni mustahkamladi va startapimni qurishga yordam berdi.",
-    quoteRu: "Знания кафедры экономики и менеджмента укрепили мою уверенность в предпринимательском пути и помогли построить стартап.",
-    quoteEn: "The knowledge from the economics and management department strengthened my confidence in entrepreneurship and helped build my startup.",
-    quoteTr: "Ekonomi ve yönetim bölümünden aldığım bilgiler, girişimcilik yolumda özgüvenimi pekiştirdi ve startup'ımı kurmama yardımcı oldu.",
-    color: "#D6A84F",
-    year: "2021",
+    initials: "BN",
+    color: "#00a050",
+    name: { uz: "Behruz Normatov", ru: "Бехруз Норматов", en: "Behruz Normatov", tr: "Behruz Normatov" },
+    role: { uz: "Dasturchi — Davlat IT agentligi, 2023-yil bitiruvchi", ru: "Программист — Государственное IT-агентство, выпускник 2023", en: "Developer — State IT Agency, 2023 Graduate", tr: "Geliştirici — Devlet BT Ajansı, 2023 Mezunu" },
+    quote: { uz: "ATMU Smart UniLibrary dasturlash va algoritmlar bo'yicha kerakli materiallarni tezda topishga yordam berdi. AI kutubxonachi xizmati ayniqsa diplom loyihasi davomida beqiyos yordam bo'ldi.", ru: "ATMU Smart UniLibrary помогла быстро найти нужные материалы по программированию и алгоритмам. Сервис ИИ-библиотекаря был особенно незаменим во время работы над дипломным проектом.", en: "ATMU Smart UniLibrary helped me quickly find the materials I needed on programming and algorithms. The AI librarian service was especially invaluable during my diploma project.", tr: "ATMU Smart UniLibrary programlama ve algoritmalar konusunda ihtiyacım olan materyalleri hızla bulmama yardımcı oldu." },
   },
   {
-    initials: "HY",
-    nameUz: "Hulkar Yusupova", nameRu: "Хулкар Юсупова", nameEn: "Hulkar Yusupova", nameTr: "Hulkar Yusupova",
-    roleUz: "Magistr, xalqaro tashkilot xodimi", roleRu: "Магистр, сотрудник международной организации", roleEn: "Master, international organization staff", roleTr: "Yüksek lisans mezunu, uluslararası kuruluş çalışanı",
-    quoteUz: "Filologiya kafedrasi bergan chuqur til bilimlari va ilmiy maqolalar yozish ko'nikmasi xalqaro faoliyatimda muhim ahamiyat kasb etmoqda.",
-    quoteRu: "Глубокие языковые знания и навык написания научных статей, полученные на кафедре филологии, имеют важное значение в моей международной деятельности.",
-    quoteEn: "Deep language knowledge and scientific article writing skills gained at the philology department are of great importance in my international activities.",
-    quoteTr: "Filoloji bölümünde edindiğim derin dil bilgisi ve bilimsel makale yazma becerisi, uluslararası faaliyetlerimde büyük önem taşımaktadır.",
-    color: "#7C3AED",
-    year: "2022",
+    initials: "NS",
+    color: "#cc6600",
+    name: { uz: "Nodira Sobirov", ru: "Нодира Собирова", en: "Nodira Sobirov", tr: "Nodira Sobirov" },
+    role: { uz: "O'qituvchi — Mahalliy maktab, 2020-yil bitiruvchi", ru: "Учитель — местная школа, выпускница 2020", en: "Teacher — Local School, 2020 Graduate", tr: "Öğretmen — Yerel Okul, 2020 Mezunu" },
+    quote: { uz: "Pedagogika kafedrasi elektron resurslari orqali o'qitish metodikasini chuqur o'rganish imkonim bo'ldi. Hozir o'zim o'quvchilarimga raqamli ta'lim usullarini o'rgatyapman.", ru: "Через электронные ресурсы кафедры педагогики у меня была возможность глубоко изучить методику преподавания. Теперь я сама обучаю своих учеников методам цифрового образования.", en: "Through the pedagogy department's e-resources I had the opportunity to deeply study teaching methodology. Now I myself teach my students digital education methods.", tr: "Pedagoji bölümünün e-kaynakları aracılığıyla öğretim metodolojisini derinlemesine inceleme fırsatım oldu." },
   },
 ];
 
 export default function AlumniSection() {
   const locale = useLocale() as Locale;
-  const L = T[locale] || T.uz;
-  const [active, setActive] = useState(0);
+  const [idx, setIdx] = useState(0);
 
-  const getName = (a: typeof ALUMNI[0]) => {
-    if (locale === "ru") return a.nameRu;
-    if (locale === "en") return a.nameEn;
-    if (locale === "tr") return a.nameTr;
-    return a.nameUz;
-  };
+  const prev = () => setIdx((idx - 1 + ALUMNI.length) % ALUMNI.length);
+  const next = () => setIdx((idx + 1) % ALUMNI.length);
 
-  const getRole = (a: typeof ALUMNI[0]) => {
-    if (locale === "ru") return a.roleRu;
-    if (locale === "en") return a.roleEn;
-    if (locale === "tr") return a.roleTr;
-    return a.roleUz;
-  };
-
-  const getQuote = (a: typeof ALUMNI[0]) => {
-    if (locale === "ru") return a.quoteRu;
-    if (locale === "en") return a.quoteEn;
-    if (locale === "tr") return a.quoteTr;
-    return a.quoteUz;
-  };
-
-  const current = ALUMNI[active];
+  const alumni = ALUMNI[idx];
+  const titleLabel = locale === "uz" ? "Faxriy bitiruvchilar" : locale === "ru" ? "Выпускники" : locale === "tr" ? "Mezunlar" : "Alumni";
 
   return (
-    <section className="py-14 bg-[#F5F7FA]">
-      <div className="max-w-[1280px] mx-auto px-4">
-        <div className="mb-10 text-center">
-          <div className="section-tag mb-3 mx-auto">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#1457A8]" />
-            {L.tag}
+    <section className="py-14 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#001d3d 0%,#002b4e 50%,#001428 100%)" }}>
+      {/* Background dots pattern */}
+      <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "24px 24px" }} />
+
+      <div className="max-w-[1680px] mx-auto px-5 sm:px-8 relative z-10">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-8 h-px bg-[#e8a820]" />
+            <span className="text-[#e8a820] text-[11px] font-bold uppercase tracking-widest">{titleLabel}</span>
+            <span className="w-8 h-px bg-[#e8a820]" />
           </div>
-          <h2 className="text-[#061B3A] text-2xl lg:text-3xl font-bold">{L.title}</h2>
-          <div className="section-divider mx-auto mt-2" />
-          <p className="text-gray-500 text-sm mt-3 max-w-xl mx-auto">{L.subtitle}</p>
+          <h2 style={{ color: "#fff", fontFamily: "'Georgia',serif", fontSize: "clamp(22px,2.5vw,36px)", fontWeight: 800 }}>{titleLabel}</h2>
         </div>
 
+        {/* Main testimonial */}
         <div className="max-w-3xl mx-auto">
-          {/* Slider */}
-          <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 mb-6">
-            <div className="text-5xl font-serif mb-4" style={{ color: current.color }}>"</div>
-            <p className="text-gray-700 text-[15px] leading-7 italic mb-6">{getQuote(current)}</p>
-            <div className="flex items-center gap-4 pt-5 border-t border-gray-100">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-base flex-shrink-0"
-                style={{ background: `linear-gradient(135deg, ${current.color}, ${current.color}88)` }}
-              >
-                {current.initials}
+          <div className="bg-white/8 border border-white/12 rounded-3xl p-8 sm:p-10 text-center relative">
+            {/* Quote mark */}
+            <div className="text-[#e8a820]/20 font-black absolute top-4 left-6" style={{ fontSize: 80, lineHeight: 1, fontFamily: "Georgia,serif" }}>"</div>
+
+            {/* Avatar */}
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center font-black text-white text-xl mx-auto mb-5"
+              style={{ background: alumni.color }}
+            >
+              {alumni.initials}
+            </div>
+
+            <p className="text-white/80 text-[15px] sm:text-[17px] leading-relaxed italic mb-6 relative z-10">
+              "{t(alumni.quote, locale)}"
+            </p>
+
+            <div className="text-white font-bold text-[15px] mb-1">{t(alumni.name, locale)}</div>
+            <div className="text-white/45 text-[12px]">{t(alumni.role, locale)}</div>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <button onClick={prev} className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-colors">
+                <ChevronLeft size={18} />
+              </button>
+              <div className="flex gap-2">
+                {ALUMNI.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setIdx(i)}
+                    className={`rounded-full transition-all ${i === idx ? "w-6 h-2.5 bg-[#e8a820]" : "w-2.5 h-2.5 bg-white/25 hover:bg-white/45"}`}
+                  />
+                ))}
               </div>
-              <div>
-                <div className="text-[#172033] font-bold text-[14px]">{getName(current)}</div>
-                <div className="text-gray-500 text-[12px]">{getRole(current)}</div>
-                <div className="text-[11px] mt-0.5" style={{ color: current.color }}>
-                  {locale === "uz" ? "Bitirgan yil:" : locale === "ru" ? "Выпуск:" : locale === "tr" ? "Mezuniyet:" : "Year:"} {current.year}
-                </div>
-              </div>
+              <button onClick={next} className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-colors">
+                <ChevronRight size={18} />
+              </button>
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={() => setActive((a) => (a - 1 + ALUMNI.length) % ALUMNI.length)}
-              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:border-[#1457A8] hover:text-[#1457A8] transition-colors"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <div className="flex gap-2">
-              {ALUMNI.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  className={`w-2 h-2 rounded-full transition-all ${i === active ? "w-6 bg-[#1457A8]" : "bg-gray-300"}`}
-                />
-              ))}
-            </div>
-            <button
-              onClick={() => setActive((a) => (a + 1) % ALUMNI.length)}
-              className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:border-[#1457A8] hover:text-[#1457A8] transition-colors"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-
-          {/* Mini avatars */}
-          <div className="flex justify-center gap-3 mt-6">
+          {/* Side avatars */}
+          <div className="flex justify-center gap-3 mt-5">
             {ALUMNI.map((a, i) => (
               <button
                 key={i}
-                onClick={() => setActive(i)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all ${i === active ? "ring-2 ring-offset-2 scale-110" : "opacity-60 hover:opacity-100"}`}
+                onClick={() => setIdx(i)}
+                className={`w-10 h-10 rounded-full font-bold text-[13px] text-white transition-all ${i === idx ? "ring-2 ring-[#e8a820] ring-offset-2 ring-offset-transparent scale-110" : "opacity-50 hover:opacity-80"}`}
                 style={{ background: a.color }}
               >
                 {a.initials}

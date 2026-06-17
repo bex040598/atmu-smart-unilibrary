@@ -1,583 +1,276 @@
 "use client";
-
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useLocale } from "next-intl";
-import { Link, usePathname } from "@/i18n/navigation";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
+import { isAuthenticated, getUser, clearAuth } from "@/lib/auth";
 import {
-  ChevronDown, Menu, X, Search, LogIn, User,
-  Eye, Grid3X3, ChevronRight, BookOpen, Cpu,
-  FlaskConical, Globe2, GraduationCap, Building,
-  Library, Calendar, FileText, Microscope, Award,
-  BookMarked, Bot, MapPin, Brain
+  Search, User, Menu, X, ChevronDown, ChevronRight,
+  Globe, BookOpen, Eye, LogOut, LayoutGrid
 } from "lucide-react";
-
-const LOCALES = [
-  { code: "uz", label: "O'zb" },
-  { code: "ru", label: "Рус" },
-  { code: "en", label: "Eng" },
-  { code: "tr", label: "Türk" },
-];
 
 type Locale = "uz" | "ru" | "en" | "tr";
 
-const T: Record<Locale, Record<string, string>> = {
-  uz: {
-    univ: "Axborot texnologiyalari va menejment universiteti",
-    student: "Talaba",
-    staff: "Xodim",
-    elib: "E-Lib",
-    alumni: "Bitiruvchilar",
-    news_service: "Axborot xizmati",
-    university: "Universitet",
-    education: "Ta'lim",
-    science: "Ilm-fan",
-    international: "Xalqaro aloqalar",
-    morality: "Ma'naviyat",
-    admission: "Qabul komissiyasi",
-    elibrary: "Elektron kutubxona",
-    search_ph: "Qidirish...",
-    login: "Kirish",
-    // Universitet mega menu
-    about_univ: "Universitet haqida",
-    leadership: "Rahbariyat",
-    structure: "Tuzilma",
-    faculties: "Fakultetlar",
-    departments: "Kafedralar",
-    official_docs: "Rasmiy hujjatlar",
-    // Ta'lim
-    bachelor: "Bakalavriat",
-    master: "Magistratura",
-    distance: "Sirtqi ta'lim",
-    schedule: "Dars jadvali",
-    hemis: "HEMIS",
-    moodle: "Moodle",
-    // Ilm-fan
-    sci_centers: "Ilmiy markazlar",
-    sci_projects: "Ilmiy loyihalar",
-    conferences: "Konferensiyalar",
-    dissertations: "Dissertatsiyalar",
-    articles: "Maqolalar",
-    // Elektron kutubxona
-    smart_lib: "Smart UniLibrary",
-    e_catalog: "Elektron katalog",
-    dept_lib: "Kafedralar kutubxonasi",
-    book_reserve: "Kitob band qilish",
-    room_reserve: "O'quv zali bron qilish",
-    ai_lib: "AI kutubxonachi",
-    face_id: "Face ID",
-    all_depts: "Barcha kafedralar",
-  },
-  ru: {
-    univ: "Университет информационных технологий и менеджмента",
-    student: "Студент",
-    staff: "Сотрудник",
-    elib: "Э-Биб",
-    alumni: "Выпускники",
-    news_service: "Информационная служба",
-    university: "Университет",
-    education: "Образование",
-    science: "Наука",
-    international: "Международные связи",
-    morality: "Духовность",
-    admission: "Приёмная комиссия",
-    elibrary: "Электронная библиотека",
-    search_ph: "Поиск...",
-    login: "Войти",
-    about_univ: "Об университете",
-    leadership: "Руководство",
-    structure: "Структура",
-    faculties: "Факультеты",
-    departments: "Кафедры",
-    official_docs: "Официальные документы",
-    bachelor: "Бакалавриат",
-    master: "Магистратура",
-    distance: "Заочное обучение",
-    schedule: "Расписание",
-    hemis: "HEMIS",
-    moodle: "Moodle",
-    sci_centers: "Научные центры",
-    sci_projects: "Научные проекты",
-    conferences: "Конференции",
-    dissertations: "Диссертации",
-    articles: "Статьи",
-    smart_lib: "Smart UniLibrary",
-    e_catalog: "Электронный каталог",
-    dept_lib: "Кафедральные библиотеки",
-    book_reserve: "Бронирование книги",
-    room_reserve: "Бронирование зала",
-    ai_lib: "AI библиотекарь",
-    face_id: "Face ID",
-    all_depts: "Все кафедры",
-  },
-  en: {
-    univ: "University of Information Technologies and Management",
-    student: "Student",
-    staff: "Staff",
-    elib: "E-Lib",
-    alumni: "Alumni",
-    news_service: "News Service",
-    university: "University",
-    education: "Education",
-    science: "Science",
-    international: "International",
-    morality: "Spirituality",
-    admission: "Admissions",
-    elibrary: "E-Library",
-    search_ph: "Search...",
-    login: "Login",
-    about_univ: "About University",
-    leadership: "Leadership",
-    structure: "Structure",
-    faculties: "Faculties",
-    departments: "Departments",
-    official_docs: "Official Documents",
-    bachelor: "Bachelor",
-    master: "Master",
-    distance: "Distance Learning",
-    schedule: "Schedule",
-    hemis: "HEMIS",
-    moodle: "Moodle",
-    sci_centers: "Scientific Centers",
-    sci_projects: "Scientific Projects",
-    conferences: "Conferences",
-    dissertations: "Dissertations",
-    articles: "Articles",
-    smart_lib: "Smart UniLibrary",
-    e_catalog: "E-Catalog",
-    dept_lib: "Department Libraries",
-    book_reserve: "Book Reservation",
-    room_reserve: "Reading Room Booking",
-    ai_lib: "AI Librarian",
-    face_id: "Face ID",
-    all_depts: "All departments",
-  },
-  tr: {
-    univ: "Bilgi Teknolojileri ve Yönetim Üniversitesi",
-    student: "Öğrenci",
-    staff: "Personel",
-    elib: "E-Kütüp",
-    alumni: "Mezunlar",
-    news_service: "Haber Servisi",
-    university: "Üniversite",
-    education: "Eğitim",
-    science: "Bilim",
-    international: "Uluslararası",
-    morality: "Maneviyat",
-    admission: "Kabul Komisyonu",
-    elibrary: "E-Kütüphane",
-    search_ph: "Ara...",
-    login: "Giriş",
-    about_univ: "Üniversite Hakkında",
-    leadership: "Yönetim",
-    structure: "Yapı",
-    faculties: "Fakülteler",
-    departments: "Bölümler",
-    official_docs: "Resmi Belgeler",
-    bachelor: "Lisans",
-    master: "Yüksek Lisans",
-    distance: "Uzaktan Eğitim",
-    schedule: "Ders Programı",
-    hemis: "HEMIS",
-    moodle: "Moodle",
-    sci_centers: "Bilim Merkezleri",
-    sci_projects: "Bilimsel Projeler",
-    conferences: "Konferanslar",
-    dissertations: "Tezler",
-    articles: "Makaleler",
-    smart_lib: "Smart UniLibrary",
-    e_catalog: "E-Katalog",
-    dept_lib: "Bölüm Kütüphaneleri",
-    book_reserve: "Kitap Rezervasyonu",
-    room_reserve: "Okuma Salonu Rezervasyonu",
-    ai_lib: "AI Kütüphaneci",
-    face_id: "Face ID",
-    all_depts: "Tüm bölümler",
-  },
-};
+const LANGS: { code: Locale; label: string }[] = [
+  { code: "uz", label: "O'zbek" },
+  { code: "ru", label: "Русский" },
+  { code: "en", label: "English" },
+  { code: "tr", label: "Türkçe" },
+];
 
-const DEPARTMENTS = [
-  { slug: "axborot-texnologiyalari", icon: <Cpu size={15} />, uz: "Axborot texnologiyalari kafedrasi", ru: "Кафедра ИТ", en: "IT Department" },
-  { slug: "iqtisodiyot", icon: <Building size={15} />, uz: "Iqtisodiyot kafedrasi", ru: "Кафедра экономики", en: "Economics Dept." },
-  { slug: "matematika", icon: <Microscope size={15} />, uz: "Matematika kafedrasi", ru: "Кафедра математики", en: "Mathematics Dept." },
-  { slug: "filologiya", icon: <Globe2 size={15} />, uz: "Filologiya kafedrasi", ru: "Кафедра филологии", en: "Philology Dept." },
-  { slug: "tarix", icon: <Award size={15} />, uz: "Tarix kafedrasi", ru: "Кафедра истории", en: "History Dept." },
-  { slug: "pedagogika", icon: <GraduationCap size={15} />, uz: "Pedagogika kafedrasi", ru: "Кафедра педагогики", en: "Pedagogy Dept." },
+const NAV_ITEMS = [
+  {
+    key: "news", label: { uz: "Axborot xizmati", ru: "Пресс-служба", en: "Press Service", tr: "Basın" },
+    children: [
+      { label: { uz: "Yangiliklar", ru: "Новости", en: "News", tr: "Haberler" }, href: "/" },
+      { label: { uz: "E'lonlar", ru: "Объявления", en: "Announcements", tr: "Duyurular" }, href: "/" },
+    ],
+  },
+  {
+    key: "university", label: { uz: "Universitet", ru: "Университет", en: "University", tr: "Üniversite" },
+    children: [
+      { label: { uz: "Tarix", ru: "История", en: "History", tr: "Tarih" }, href: "/" },
+      { label: { uz: "Rahbariyat", ru: "Руководство", en: "Leadership", tr: "Yönetim" }, href: "/" },
+      { label: { uz: "Tuzilma", ru: "Структура", en: "Structure", tr: "Yapı" }, href: "/" },
+      { label: { uz: "Hujjatlar", ru: "Документы", en: "Documents", tr: "Belgeler" }, href: "/" },
+    ],
+  },
+  {
+    key: "education", label: { uz: "Ta'lim", ru: "Образование", en: "Education", tr: "Eğitim" },
+    children: [
+      { label: { uz: "Bakalavriat", ru: "Бакалавриат", en: "Bachelor", tr: "Lisans" }, href: "/" },
+      { label: { uz: "Magistratura", ru: "Магистратура", en: "Master", tr: "Lisansüstü" }, href: "/" },
+      { label: { uz: "Kafedralar", ru: "Кафедры", en: "Departments", tr: "Bölümler" }, href: "/departments" },
+      { label: { uz: "Dars jadvali", ru: "Расписание", en: "Schedule", tr: "Program" }, href: "/" },
+    ],
+  },
+  {
+    key: "science", label: { uz: "Ilm-fan", ru: "Наука", en: "Science", tr: "Bilim" },
+    children: [
+      { label: { uz: "Ilmiy markazlar", ru: "Научные центры", en: "Research Centers", tr: "Araştırma" }, href: "/" },
+      { label: { uz: "Nashrlar", ru: "Публикации", en: "Publications", tr: "Yayınlar" }, href: "/" },
+    ],
+  },
+  { key: "international", label: { uz: "Xalqaro aloqalar", ru: "Международные", en: "International", tr: "Uluslararası" }, children: [] },
+  { key: "spirituality", label: { uz: "Ma'naviyat", ru: "Духовность", en: "Spirituality", tr: "Maneviyat" }, children: [] },
+  { key: "admission", label: { uz: "Qabul", ru: "Приёмная", en: "Admission", tr: "Kabul" }, children: [] },
+  {
+    key: "elibrary", label: { uz: "Elektron kutubxona", ru: "Эл. библиотека", en: "E-Library", tr: "E-Kütüphane" },
+    children: [
+      { label: { uz: "Elektron katalog", ru: "Эл. каталог", en: "E-Catalog", tr: "E-Katalog" }, href: "/catalog" },
+      { label: { uz: "O'quv zali", ru: "Читальный зал", en: "Reading Room", tr: "Okuma Salonu" }, href: "/library/reading-room" },
+      { label: { uz: "AI kutubxonachi", ru: "ИИ-библиотекарь", en: "AI Librarian", tr: "AI Kütüphaneci" }, href: "/ai" },
+    ],
+  },
 ];
 
 export default function Header() {
   const locale = useLocale() as Locale;
-  const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [megaOpen, setMegaOpen] = useState(false);
-  const navRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchQ, setSearchQ] = useState("");
+  const [userOpen, setUserOpen] = useState(false);
+  const authenticated = isAuthenticated();
+  const user = authenticated ? getUser() : null;
 
-  const L = T[locale] || T.uz;
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(e.target as Node)) {
-        setActiveMenu(null);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  useEffect(() => {
-    if (searchOpen && searchRef.current) searchRef.current.focus();
-  }, [searchOpen]);
-
-  const switchLocale = (code: string) => {
-    router.push(pathname, { locale: code });
+  const switchLang = (code: Locale) => {
+    router.push("/", { locale: code });
+    setLangOpen(false);
   };
-
-  const getDeptName = (d: (typeof DEPARTMENTS)[0]) => {
-    if (locale === "ru") return d.ru;
-    if (locale === "en") return d.en;
-    return d.uz;
-  };
-
-  const openMenu = (key: string) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setActiveMenu(key);
-  };
-
-  const closeMenu = () => {
-    closeTimer.current = setTimeout(() => setActiveMenu(null), 120);
-  };
-
-  const MEGA_MENUS: Record<string, { title: string; items: { icon: React.ReactNode; label: string; href: string }[] }[]> = {
-    university: [
-      {
-        title: L.university,
-        items: [
-          { icon: <Building size={14} />, label: L.about_univ, href: "/about" },
-          { icon: <User size={14} />, label: L.leadership, href: "/leadership" },
-          { icon: <Grid3X3 size={14} />, label: L.structure, href: "/structure" },
-          { icon: <GraduationCap size={14} />, label: L.faculties, href: "/faculties" },
-          { icon: <BookOpen size={14} />, label: L.departments, href: "/departments" },
-          { icon: <FileText size={14} />, label: L.official_docs, href: "/documents" },
-        ],
-      },
-    ],
-    education: [
-      {
-        title: L.education,
-        items: [
-          { icon: <GraduationCap size={14} />, label: L.bachelor, href: "/bachelor" },
-          { icon: <Award size={14} />, label: L.master, href: "/master" },
-          { icon: <Globe2 size={14} />, label: L.distance, href: "/distance" },
-          { icon: <Calendar size={14} />, label: L.schedule, href: "/schedule" },
-          { icon: <Cpu size={14} />, label: L.hemis, href: "/hemis" },
-          { icon: <Library size={14} />, label: L.moodle, href: "/moodle" },
-        ],
-      },
-    ],
-    science: [
-      {
-        title: L.science,
-        items: [
-          { icon: <FlaskConical size={14} />, label: L.sci_centers, href: "/science/centers" },
-          { icon: <Microscope size={14} />, label: L.sci_projects, href: "/science/projects" },
-          { icon: <Calendar size={14} />, label: L.conferences, href: "/science/conferences" },
-          { icon: <FileText size={14} />, label: L.dissertations, href: "/science/dissertations" },
-          { icon: <BookMarked size={14} />, label: L.articles, href: "/science/articles" },
-        ],
-      },
-    ],
-    elibrary: [
-      {
-        title: L.elibrary,
-        items: [
-          { icon: <Library size={14} />, label: L.smart_lib, href: "/" },
-          { icon: <BookOpen size={14} />, label: L.e_catalog, href: "/catalog" },
-          { icon: <Building size={14} />, label: L.dept_lib, href: "/departments" },
-          { icon: <BookMarked size={14} />, label: L.book_reserve, href: "/catalog" },
-          { icon: <MapPin size={14} />, label: L.room_reserve, href: "/library/reading-room" },
-          { icon: <Bot size={14} />, label: L.ai_lib, href: "/ai" },
-          { icon: <Brain size={14} />, label: L.face_id, href: "/profile" },
-        ],
-      },
-    ],
-  };
-
-  const NAV = [
-    { key: "news_service", label: L.news_service, href: "/news", mega: null },
-    { key: "university", label: L.university, href: "/about", mega: "university" },
-    { key: "education", label: L.education, href: "/education", mega: "education" },
-    { key: "science", label: L.science, href: "/science", mega: "science" },
-    { key: "international", label: L.international, href: "/international", mega: null },
-    { key: "morality", label: L.morality, href: "/morality", mega: null },
-    { key: "admission", label: L.admission, href: "/admission", mega: null },
-    { key: "elibrary", label: L.elibrary, href: "/catalog", mega: "elibrary" },
-  ];
+  const handleLogout = () => { clearAuth(); router.push("/"); setUserOpen(false); };
+  const currentLang = LANGS.find(l => l.code === locale) || LANGS[0];
+  const t = (obj: Record<string, string>) => obj[locale] || obj.uz;
 
   return (
-    <header className="w-full sticky top-0 z-50 shadow-xl">
-      {/* ── Row 1: Topbar ─────────────────────────────── */}
-      <div className="bg-[#040D1A] border-b border-white/5 hidden md:block">
-        <div className="max-w-[1280px] mx-auto px-4 h-9 flex items-center justify-between text-[11px] text-white/55">
-          <div className="flex items-center gap-6">
-            <span className="font-semibold text-yellow-400/90 tracking-wide">ATMU</span>
-            <span className="text-white/30">|</span>
-            <a href="/student-portal" className="hover:text-white transition-colors flex items-center gap-1">
-              <User size={11} />{L.student}
-            </a>
-            <a href="/staff-portal" className="hover:text-white transition-colors flex items-center gap-1">
-              <Building size={11} />{L.staff}
-            </a>
-            <a href="/catalog" className="hover:text-yellow-300 transition-colors flex items-center gap-1">
-              <Library size={11} />{L.elib}
-            </a>
-            <a href="/alumni" className="hover:text-white transition-colors flex items-center gap-1">
-              <Award size={11} />{L.alumni}
-            </a>
-          </div>
-          <div className="flex items-center gap-2">
-            <button title="Ko'rish imkoniyati" className="hover:text-white p-1 transition-colors">
-              <Eye size={12} />
-            </button>
-            <div className="flex items-center gap-0.5 ml-1">
-              {LOCALES.map((loc) => (
-                <button
-                  key={loc.code}
-                  onClick={() => switchLocale(loc.code)}
-                  className={`px-2 py-0.5 rounded text-[10px] font-bold transition-colors ${
-                    locale === loc.code
-                      ? "bg-yellow-400/90 text-[#040D1A]"
-                      : "text-white/40 hover:text-white/80"
-                  }`}
-                >
-                  {loc.label}
-                </button>
-              ))}
+    <>
+      {/* ===== TOP BAR ===== */}
+      <header className="portal-topbar">
+        <div className="max-w-[1680px] mx-auto px-4 h-full flex items-center gap-3">
+          {/* Logo + Brand */}
+          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-white/15 border border-white/20">
+              <BookOpen className="w-5 h-5 text-white" />
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Row 2: Logo + University Name ─────────────── */}
-      <div
-        className="text-white"
-        style={{ background: "linear-gradient(90deg,#061B3A 0%,#0B3D73 55%,#1058A0 100%)", borderBottom: "3px solid #D6A84F" }}
-      >
-        <div className="max-w-[1280px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          {/* Logo + name */}
-          <Link href="/" className="flex items-center gap-4 group flex-shrink-0">
-            <div className="w-[58px] h-[58px] rounded-full bg-white/95 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform flex-shrink-0 overflow-hidden">
-              <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-[50px] h-[50px]">
-                <circle cx="28" cy="28" r="28" fill="#061B3A"/>
-                <path d="M14 20 L28 12 L42 20 L42 36 L28 44 L14 36 Z" fill="#1457A8" opacity="0.45"/>
-                <path d="M28 16 L38 22 V34 L28 40 L18 34 V22 Z" fill="#0B3D73"/>
-                <text x="28" y="32" textAnchor="middle" fill="#D6A84F" fontSize="11" fontWeight="bold" fontFamily="Arial">AT</text>
-                <circle cx="28" cy="28" r="26" stroke="#D6A84F" strokeWidth="0.8" fill="none" strokeDasharray="3 3"/>
-              </svg>
-            </div>
-            <div>
-              <div className="text-yellow-300/85 text-[9px] font-semibold uppercase tracking-widest mb-0.5">
-                {L.univ}
-              </div>
-              <div className="text-white font-bold text-[17px] leading-tight tracking-wide">
-                ATMU Smart University
-              </div>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="text-white/35 text-[9px] tracking-wide">Smart UniLibrary</span>
-                <span className="w-1 h-1 rounded-full bg-yellow-400/50" />
-                <span className="text-white/35 text-[9px] tracking-wide">Digital University</span>
-              </div>
+            <div className="hidden sm:block">
+              <div className="text-white font-black text-[14px] leading-tight tracking-wider">ATMU</div>
+              <div className="text-white/50 text-[9px] leading-tight font-medium uppercase tracking-widest">Smart UniLibrary</div>
             </div>
           </Link>
 
-          {/* Right actions */}
-          <div className="hidden lg:flex items-center gap-2">
-            {searchOpen ? (
-              <div className="flex items-center bg-white/10 border border-white/25 rounded-lg overflow-hidden w-64">
-                <Search size={14} className="ml-3 text-white/50 flex-shrink-0" />
-                <input
-                  ref={searchRef}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && searchQuery.trim()) {
-                      router.push({ pathname: "/catalog", query: { search: searchQuery } });
-                    }
-                    if (e.key === "Escape") setSearchOpen(false);
-                  }}
-                  placeholder={L.search_ph}
-                  className="flex-1 bg-transparent text-white placeholder-white/35 text-sm px-2 py-2 outline-none"
-                />
-                <button onClick={() => setSearchOpen(false)} className="px-3 text-white/50 hover:text-white">
-                  <X size={13} />
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/15 text-white/70 hover:text-white text-[13px] px-3 py-2 rounded-lg transition-colors"
-              >
-                <Search size={14} />
-              </button>
-            )}
-            <Link
-              href="/login"
-              className="flex items-center gap-1.5 bg-yellow-400 hover:bg-yellow-300 text-[#061B3A] font-bold text-[13px] px-5 py-2 rounded-lg transition-colors"
-            >
-              <LogIn size={14} />
-              {L.login}
-            </Link>
-            <button className="flex items-center justify-center w-9 h-9 bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/15">
-              <Grid3X3 size={15} className="text-white/70" />
-            </button>
+          {/* University name center */}
+          <div className="hidden xl:block flex-1 text-center px-4">
+            <div className="text-white font-semibold text-[13px]">
+              {locale === "uz" && "Axborot texnologiyalari va menejment universiteti"}
+              {locale === "ru" && "Университет информационных технологий и менеджмента"}
+              {locale === "en" && "University of Information Technology and Management"}
+              {locale === "tr" && "Bilgi Teknolojileri ve Yönetim Üniversitesi"}
+            </div>
+            <div className="text-white/40 text-[10px] mt-0.5">Qarshi, O'zbekiston · Digital University</div>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="lg:hidden text-white p-2 rounded-lg bg-white/10"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
-      </div>
+          {/* Right actions */}
+          <div className="ml-auto flex items-center gap-0.5">
+            {[
+              { href: "/dashboard/student", label: { uz: "Talaba", ru: "Студент", en: "Student", tr: "Öğrenci" } },
+              { href: "/dashboard/teacher", label: { uz: "Xodim", ru: "Сотрудник", en: "Staff", tr: "Personel" } },
+              { href: "/catalog", label: { uz: "E-Lib", ru: "Э-Биб", en: "E-Lib", tr: "E-Ktp" } },
+            ].map(item => (
+              <Link key={item.href} href={item.href}
+                className="hidden md:block text-white/65 hover:text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg hover:bg-white/10 transition-colors">
+                {t(item.label)}
+              </Link>
+            ))}
 
-      {/* ── Row 3: Main Navigation ─────────────────────── */}
-      <div className="bg-[#0B3D73] border-b border-white/10 hidden lg:block" ref={navRef}>
-        <div className="max-w-[1280px] mx-auto px-4">
-          <nav className="flex items-center">
-            {NAV.map((item) => (
-              <div
-                key={item.key}
-                className="nav-item relative"
-                onMouseEnter={() => item.mega ? openMenu(item.key) : undefined}
-                onMouseLeave={() => item.mega ? closeMenu() : undefined}
-              >
-                {item.mega ? (
-                  <button
-                    className={`flex items-center gap-1 px-3.5 py-3.5 text-[12.5px] font-medium transition-colors whitespace-nowrap
-                      ${activeMenu === item.key ? "text-yellow-300 bg-white/8" : "text-white/80 hover:text-yellow-300 hover:bg-white/5"}
-                      ${pathname.startsWith(item.href) ? "text-yellow-300 border-b-2 border-yellow-300" : ""}
-                    `}
-                  >
-                    {item.label}
-                    <ChevronDown size={11} className="opacity-60" />
-                  </button>
-                ) : (
-                  <Link
-                    href={item.href as "/news" | "/about" | "/education" | "/science" | "/international" | "/morality" | "/admission" | "/catalog"}
-                    className={`flex items-center px-3.5 py-3.5 text-[12.5px] font-medium transition-colors whitespace-nowrap
-                      ${pathname === item.href ? "text-yellow-300 border-b-2 border-yellow-300" : "text-white/80 hover:text-yellow-300 hover:bg-white/5"}
-                    `}
-                  >
-                    {item.label}
-                  </Link>
-                )}
+            <span className="w-px h-5 bg-white/15 mx-1.5 hidden md:block" />
 
-                {/* Mega dropdown */}
-                {item.mega && activeMenu === item.key && MEGA_MENUS[item.mega] && (
-                  <div
-                    className="absolute top-full left-0 bg-white border-t-3 shadow-2xl rounded-b-xl z-50 py-5 min-w-[260px]"
-                    style={{ borderTop: "3px solid #1457A8" }}
-                    onMouseEnter={() => openMenu(item.key)}
-                    onMouseLeave={() => closeMenu()}
-                  >
-                    {MEGA_MENUS[item.mega].map((col) => (
-                      <div key={col.title} className="px-4">
-                        <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 pb-1 border-b border-gray-100">
-                          {col.title}
-                        </div>
-                        {item.key === "university" && (
-                          <div className="mb-2">
-                            <div className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">{L.all_depts}</div>
-                            <div className="grid grid-cols-1 gap-0.5 mb-3">
-                              {DEPARTMENTS.map((dept) => (
-                                <Link
-                                  key={dept.slug}
-                                  href={`/departments/${dept.slug}` as `/departments/${string}`}
-                                  className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-blue-50 text-[12px] text-gray-700 hover:text-[#1457A8] transition-colors"
-                                >
-                                  <span className="text-[#1457A8]">{dept.icon}</span>
-                                  {getDeptName(dept)}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        <div className="space-y-0.5">
-                          {col.items.map((it) => (
-                            <Link
-                              key={it.label}
-                              href={it.href as "/about" | "/leadership" | "/structure" | "/faculties" | "/departments" | "/documents" | "/bachelor" | "/master" | "/distance" | "/schedule" | "/hemis" | "/moodle" | "/science/centers" | "/science/projects" | "/science/conferences" | "/science/dissertations" | "/science/articles" | "/" | "/catalog" | "/library/reading-room" | "/ai" | "/profile"}
-                              className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-blue-50 text-[13px] text-gray-700 hover:text-[#1457A8] transition-colors"
-                            >
-                              <span className="text-[#1457A8] flex-shrink-0">{it.icon}</span>
-                              {it.label}
-                              <ChevronRight size={10} className="ml-auto text-gray-300" />
-                            </Link>
-                          ))}
-                        </div>
+            <button className="w-8 h-8 flex items-center justify-center text-white/55 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+              <Eye size={14} />
+            </button>
+
+            <button onClick={() => setSearchOpen(!searchOpen)}
+              className="w-8 h-8 flex items-center justify-center text-white/55 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+              <Search size={14} />
+            </button>
+
+            {/* Language dropdown */}
+            <div className="relative">
+              <button onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-1 px-2.5 py-1.5 text-white/65 hover:text-white hover:bg-white/10 rounded-lg text-[11px] font-bold transition-colors">
+                <Globe size={12} />
+                {currentLang.code.toUpperCase()}
+                <ChevronDown size={10} />
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-2xl border border-gray-100 py-1 z-[200]">
+                  {LANGS.map(lang => (
+                    <button key={lang.code} onClick={() => switchLang(lang.code)}
+                      className={`w-full text-left px-3 py-2 text-[12px] hover:bg-blue-50 transition-colors ${lang.code === locale ? "text-[#00579f] font-bold" : "text-gray-700"}`}>
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* User */}
+            <div className="relative">
+              <button onClick={() => setUserOpen(!userOpen)}
+                className="w-8 h-8 flex items-center justify-center text-white/55 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                <User size={14} />
+              </button>
+              {userOpen && (
+                <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-2xl border border-gray-100 py-1 z-[200]">
+                  {authenticated ? (
+                    <>
+                      <div className="px-3 py-2 border-b border-gray-100">
+                        <div className="text-[12px] font-semibold text-gray-800 truncate">{user?.full_name}</div>
+                        <div className="text-[10px] text-gray-400 capitalize">{user?.role}</div>
                       </div>
-                    ))}
+                      <Link href="/profile" onClick={() => setUserOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-[12px] text-gray-700 hover:bg-blue-50 transition-colors">
+                        <User size={12} />{locale === "uz" ? "Profil" : locale === "ru" ? "Профиль" : "Profile"}
+                      </Link>
+                      <button onClick={handleLogout}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-[12px] text-red-600 hover:bg-red-50 transition-colors">
+                        <LogOut size={12} />{locale === "uz" ? "Chiqish" : "Выйти"}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/auth/login" onClick={() => setUserOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-[12px] text-gray-700 hover:bg-blue-50 transition-colors">
+                        <User size={12} />{locale === "uz" ? "Kirish" : locale === "ru" ? "Войти" : "Login"}
+                      </Link>
+                      <Link href="/auth/register" onClick={() => setUserOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-[12px] text-gray-700 hover:bg-blue-50 transition-colors">
+                        {locale === "uz" ? "Ro'yxatdan o'tish" : "Регистрация"}
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <button onClick={() => setMobileOpen(!mobileOpen)}
+              className="lg:hidden w-8 h-8 flex items-center justify-center text-white/65 hover:text-white hover:bg-white/10 rounded-lg transition-colors ml-1">
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Search bar */}
+        {searchOpen && (
+          <div className="bg-[#001428] border-t border-white/10 px-4 py-3">
+            <div className="max-w-[1680px] mx-auto flex gap-2 max-w-xl">
+              <input autoFocus value={searchQ} onChange={e => setSearchQ(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter" && searchQ.trim()) { router.push(`/catalog?search=${encodeURIComponent(searchQ)}`); setSearchOpen(false); }}}
+                placeholder={locale === "uz" ? "Qidirish..." : locale === "ru" ? "Поиск..." : "Search..."}
+                className="flex-1 max-w-lg bg-white/10 text-white placeholder-white/40 px-4 py-2 rounded-xl text-[13px] border border-white/20 focus:outline-none focus:border-white/40" />
+              <button onClick={() => { if (searchQ.trim()) { router.push(`/catalog?search=${encodeURIComponent(searchQ)}`); setSearchOpen(false); }}}
+                className="bg-[#e8a820] text-[#001d3d] font-bold px-4 py-2 rounded-xl text-[13px] hover:bg-yellow-300 transition-colors">
+                {locale === "uz" ? "Izla" : locale === "ru" ? "Найти" : "Search"}
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* ===== MAIN NAV ===== */}
+      <nav className="portal-mainnav hidden lg:block">
+        <div className="max-w-[1680px] mx-auto px-4 h-full flex items-center justify-between">
+          <div className="flex items-stretch h-full">
+            {NAV_ITEMS.map(item => (
+              <div key={item.key} className="nav-item relative flex items-stretch">
+                <button className="nav-link flex items-center gap-1">
+                  {t(item.label)}
+                  {item.children.length > 0 && <ChevronDown size={10} className="opacity-50" />}
+                </button>
+                {item.children.length > 0 && (
+                  <div className="mega-menu">
+                    <div className="max-w-[1680px] mx-auto px-6 py-5 grid grid-cols-4 gap-1">
+                      {item.children.map((child, i) => (
+                        <Link key={i} href={child.href}
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[13px] text-gray-700 hover:bg-blue-50 hover:text-[#00579f] transition-colors font-medium">
+                          <ChevronRight size={12} className="text-[#00579f] opacity-50" />
+                          {t(child.label)}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* ── Mobile Drawer ──────────────────────────────── */}
-      {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-[200] bg-[#061B3A] overflow-y-auto">
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
-            <span className="text-white font-bold text-sm">ATMU Smart University</span>
-            <button onClick={() => setMobileOpen(false)} className="text-white p-1">
-              <X size={22} />
-            </button>
           </div>
-          <div className="p-4 space-y-1">
-            {NAV.map((item) => (
-              <Link
-                key={item.key}
-                href={item.href as "/news" | "/about" | "/education" | "/science" | "/international" | "/morality" | "/admission" | "/catalog"}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center px-4 py-3 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-sm"
-              >
-                {item.label}
-              </Link>
+          <button className="text-white/50 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors">
+            <LayoutGrid size={15} />
+          </button>
+        </div>
+      </nav>
+
+      {/* ===== MOBILE DRAWER ===== */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-[300] flex">
+          <div className="flex-1 bg-black/50" onClick={() => setMobileOpen(false)} />
+          <div className="w-72 bg-[#001d3d] h-full overflow-y-auto">
+            <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
+              <span className="text-white font-bold text-[13px]">ATMU</span>
+              <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white"><X size={20} /></button>
+            </div>
+            {NAV_ITEMS.map(item => (
+              <div key={item.key} className="border-b border-white/5">
+                <div className="px-4 py-3 text-white/80 font-semibold text-[13px]">{t(item.label)}</div>
+                {item.children.map((child, i) => (
+                  <Link key={i} href={child.href} onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 px-6 py-2.5 text-white/55 hover:text-white text-[12px]">
+                    <ChevronRight size={11} />{t(child.label)}
+                  </Link>
+                ))}
+              </div>
             ))}
-            <div className="pt-4 border-t border-white/10">
-              <Link
-                href="/login"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center gap-2 bg-yellow-400 text-[#061B3A] font-bold px-4 py-3 rounded-lg w-full text-sm"
-              >
-                <LogIn size={16} />
-                {L.login}
-              </Link>
-            </div>
-            <div className="pt-3 flex gap-2 flex-wrap">
-              {LOCALES.map((loc) => (
-                <button
-                  key={loc.code}
-                  onClick={() => { switchLocale(loc.code); setMobileOpen(false); }}
-                  className={`px-3 py-1.5 rounded text-xs font-bold ${
-                    locale === loc.code ? "bg-yellow-400 text-[#061B3A]" : "bg-white/10 text-white"
-                  }`}
-                >
-                  {loc.label}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

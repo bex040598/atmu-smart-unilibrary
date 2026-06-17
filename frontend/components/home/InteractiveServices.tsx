@@ -1,153 +1,164 @@
 "use client";
-
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import {
-  Calendar, BookOpen, GraduationCap, Monitor, Library,
-  Bot, MapPin, Fingerprint, User, Cpu
-} from "lucide-react";
+import { Calendar, BookOpen, Bot, QrCode, LayoutGrid, Monitor, GraduationCap, Users, BookMarked, Cpu } from "lucide-react";
 
 type Locale = "uz" | "ru" | "en" | "tr";
-
-const T: Record<Locale, Record<string, string>> = {
-  uz: {
-    tag: "Raqamli xizmatlar",
-    title: "Interaktiv xizmatlar",
-    cta: "Universitet interaktiv xizmatlaridan unumli foydalaning!",
-    sub: "ATMU raqamli platformalari orqali ta'lim jarayoni, ilmiy faoliyat va kutubxona xizmatlaridan qulay tarzda foydalaning.",
-    s1: "Dars jadvali",
-    s2: "HEMIS talaba",
-    s3: "Moodle kurslari",
-    s4: "HEMIS xodim",
-    s5: "Smart UniLibrary",
-    s6: "AI kutubxonachi",
-    s7: "O'quv zali bron",
-    s8: "Kitob band qilish",
-    s9: "Shaxsiy kabinet",
-    s10: "Elektron katalog",
-  },
-  ru: {
-    tag: "Цифровые услуги",
-    title: "Интерактивные услуги",
-    cta: "Используйте интерактивные сервисы университета эффективно!",
-    sub: "Пользуйтесь учебными, научными и библиотечными услугами через цифровые платформы АТМУ.",
-    s1: "Расписание",
-    s2: "HEMIS студент",
-    s3: "Курсы Moodle",
-    s4: "HEMIS сотрудник",
-    s5: "Smart UniLibrary",
-    s6: "AI библиотекарь",
-    s7: "Бронь зала",
-    s8: "Бронь книги",
-    s9: "Личный кабинет",
-    s10: "Э-каталог",
-  },
-  en: {
-    tag: "Digital Services",
-    title: "Interactive Services",
-    cta: "Make the most of university interactive services!",
-    sub: "Use educational, scientific, and library services through ATMU digital platforms.",
-    s1: "Schedule",
-    s2: "HEMIS Student",
-    s3: "Moodle Courses",
-    s4: "HEMIS Staff",
-    s5: "Smart UniLibrary",
-    s6: "AI Librarian",
-    s7: "Room Booking",
-    s8: "Book Reservation",
-    s9: "Personal Cabinet",
-    s10: "E-Catalog",
-  },
-  tr: {
-    tag: "Dijital Hizmetler",
-    title: "Etkileşimli Hizmetler",
-    cta: "Üniversitenin etkileşimli hizmetlerini etkin kullanın!",
-    sub: "ATMU dijital platformları üzerinden eğitim, bilimsel ve kütüphane hizmetlerini kullanın.",
-    s1: "Ders Programı",
-    s2: "HEMIS Öğrenci",
-    s3: "Moodle Kursları",
-    s4: "HEMIS Personel",
-    s5: "Smart UniLibrary",
-    s6: "AI Kütüphaneci",
-    s7: "Salon Rezerv.",
-    s8: "Kitap Rezerv.",
-    s9: "Kişisel Kabine",
-    s10: "E-Katalog",
-  },
-};
+const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
 const SERVICES = [
-  { key: "s1", href: "/schedule", icon: <Calendar size={22} />, color: "#1457A8" },
-  { key: "s2", href: "/hemis", icon: <User size={22} />, color: "#0E9F6E" },
-  { key: "s3", href: "/moodle", icon: <GraduationCap size={22} />, color: "#7C3AED" },
-  { key: "s4", href: "/hemis-staff", icon: <Monitor size={22} />, color: "#D6A84F" },
-  { key: "s5", href: "/catalog", icon: <Library size={22} />, color: "#1457A8" },
-  { key: "s6", href: "/ai", icon: <Bot size={22} />, color: "#0E9F6E" },
-  { key: "s7", href: "/library/reading-room", icon: <MapPin size={22} />, color: "#EF4444" },
-  { key: "s8", href: "/catalog", icon: <BookOpen size={22} />, color: "#F59E0B" },
-  { key: "s9", href: "/profile", icon: <Fingerprint size={22} />, color: "#6366F1" },
-  { key: "s10", href: "/catalog", icon: <Cpu size={22} />, color: "#0B3D73" },
+  {
+    icon: <Calendar className="w-7 h-7" />,
+    color: "#00579f",
+    bg: "#dce8f5",
+    label: { uz: "Dars jadvali", ru: "Расписание", en: "Schedule", tr: "Ders Programı" },
+    href: "/",
+  },
+  {
+    icon: <Users className="w-7 h-7" />,
+    color: "#00a050",
+    bg: "#d5f0e5",
+    label: { uz: "HEMIS talaba", ru: "HEMIS студент", en: "HEMIS Student", tr: "HEMIS Öğrenci" },
+    href: "/",
+  },
+  {
+    icon: <Monitor className="w-7 h-7" />,
+    color: "#8855cc",
+    bg: "#ede0f5",
+    label: { uz: "Moodle", ru: "Moodle", en: "Moodle", tr: "Moodle" },
+    href: "/",
+  },
+  {
+    icon: <GraduationCap className="w-7 h-7" />,
+    color: "#cc6600",
+    bg: "#f5e8d5",
+    label: { uz: "HEMIS xodim", ru: "HEMIS сотрудник", en: "HEMIS Staff", tr: "HEMIS Personel" },
+    href: "/",
+  },
+  {
+    icon: <BookOpen className="w-7 h-7" />,
+    color: "#00579f",
+    bg: "#dce8f5",
+    label: { uz: "Smart UniLibrary", ru: "Smart UniLibrary", en: "Smart UniLibrary", tr: "Smart UniLibrary" },
+    href: "/catalog",
+  },
+  {
+    icon: <Bot className="w-7 h-7" />,
+    color: "#e8a820",
+    bg: "#fdf3d8",
+    label: { uz: "AI kutubxonachi", ru: "ИИ библиотекарь", en: "AI Librarian", tr: "AI Kütüphaneci" },
+    href: "/ai",
+  },
+  {
+    icon: <QrCode className="w-7 h-7" />,
+    color: "#cc2255",
+    bg: "#f5d8e2",
+    label: { uz: "O'quv zali bron", ru: "Бронь зала", en: "Room Booking", tr: "Salon Rezerve" },
+    href: "/library/reading-room",
+  },
+  {
+    icon: <BookMarked className="w-7 h-7" />,
+    color: "#007788",
+    bg: "#d8eef0",
+    label: { uz: "Kitob band qilish", ru: "Бронь книг", en: "Book Reserve", tr: "Kitap Rezerve" },
+    href: "/catalog",
+  },
+  {
+    icon: <Cpu className="w-7 h-7" />,
+    color: "#5544aa",
+    bg: "#e8e2f8",
+    label: { uz: "Shaxsiy kabinet", ru: "Личный кабинет", en: "Personal Cabinet", tr: "Kişisel Kabin" },
+    href: "/profile",
+  },
+  {
+    icon: <LayoutGrid className="w-7 h-7" />,
+    color: "#006633",
+    bg: "#d5ebe0",
+    label: { uz: "Elektron katalog", ru: "Электронный каталог", en: "E-Catalog", tr: "E-Katalog" },
+    href: "/catalog",
+  },
 ];
 
 export default function InteractiveServices() {
   const locale = useLocale() as Locale;
-  const L = T[locale] || T.uz;
+  const titleLabel = locale === "uz" ? "Interaktiv xizmatlar" : locale === "ru" ? "Интерактивные сервисы" : locale === "tr" ? "İnteraktif Hizmetler" : "Interactive Services";
+  const panelTitle = locale === "uz" ? "Universitet interaktiv xizmatlaridan unumli foydalaning!" : locale === "ru" ? "Пользуйтесь интерактивными сервисами университета!" : locale === "tr" ? "Üniversitenin interaktif hizmetlerini etkin kullanın!" : "Make full use of the university interactive services!";
+  const panelSub = locale === "uz" ? "Barcha raqamli xizmatlar bir joyda — talabalar, o'qituvchilar va xodimlar uchun" : locale === "ru" ? "Все цифровые сервисы в одном месте — для студентов, преподавателей и сотрудников" : locale === "tr" ? "Tüm dijital hizmetler tek yerde — öğrenciler, öğretmenler ve personel için" : "All digital services in one place — for students, teachers and staff";
 
   return (
-    <section style={{ background: "linear-gradient(135deg, #061B3A 0%, #0B3D73 50%, #1058A0 100%)" }} className="py-14">
-      <div className="max-w-[1280px] mx-auto px-4">
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 text-yellow-300/70 text-[11px] font-bold uppercase tracking-widest mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-            {L.tag}
+    <section className="section-dark py-16 relative overflow-hidden">
+      {/* Decorative diagonal shapes */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full opacity-5 bg-white" />
+        <div className="absolute -bottom-10 -left-10 w-60 h-60 rounded-full opacity-5 bg-white" />
+        <div className="absolute top-1/2 left-1/3 w-96 h-2 opacity-5 bg-white rotate-12" />
+      </div>
+
+      <div className="max-w-[1680px] mx-auto px-5 sm:px-8 relative z-10">
+        {/* Section title */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-8 h-px bg-[#e8a820]" />
+            <span className="text-[#e8a820] text-[11px] font-bold uppercase tracking-widest">{titleLabel}</span>
+            <span className="w-8 h-px bg-[#e8a820]" />
           </div>
-          <h2 className="text-white text-2xl lg:text-3xl font-bold">{L.title}</h2>
-          <div className="w-10 h-0.5 bg-yellow-400/50 mt-3 rounded-full" />
         </div>
 
         {/* Big white panel */}
-        <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
-          <div className="grid lg:grid-cols-2 gap-0">
+        <div className="bg-white rounded-3xl overflow-hidden shadow-2xl mb-8">
+          <div className="grid lg:grid-cols-2 min-h-[280px]">
             {/* Left: text */}
-            <div className="p-8 lg:p-10 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-gray-100">
-              <h3 className="text-[#061B3A] text-xl lg:text-2xl font-bold leading-snug mb-4">
-                {L.cta}
-              </h3>
-              <p className="text-gray-500 text-[14px] leading-relaxed mb-6">
-                {L.sub}
+            <div className="p-8 sm:p-10 flex flex-col justify-center" style={{ background: "linear-gradient(135deg,#f8fafc 0%,#eef4fc 100%)" }}>
+              <h2 style={{ color: "#001d3d", fontFamily: "'Georgia',serif", fontSize: "clamp(20px,2.2vw,32px)", fontWeight: 800, lineHeight: 1.2, marginBottom: "16px" }}>
+                {panelTitle}
+              </h2>
+              <p style={{ color: "#5a6a7e", fontSize: "clamp(13px,1vw,15px)", lineHeight: 1.7 }}>
+                {panelSub}
               </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-blue-50 text-[#1457A8] border border-blue-100">Digital University</span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">Smart Library</span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-yellow-50 text-yellow-700 border border-yellow-100">AI Services</span>
-              </div>
             </div>
 
-            {/* Right: services grid */}
-            <div className="p-6">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-                {SERVICES.map((s) => (
-                  <Link
-                    key={s.key}
-                    href={s.href as "/schedule" | "/hemis" | "/moodle" | "/hemis-staff" | "/catalog" | "/ai" | "/library/reading-room" | "/profile"}
-                    className="service-card group p-4 flex flex-col items-center gap-2 rounded-xl border border-gray-100 hover:border-transparent transition-all"
-                  >
-                    <div
-                      className="service-icon-bg w-11 h-11 rounded-xl flex items-center justify-center transition-all"
-                      style={{ background: s.color + "15" }}
-                    >
-                      <span className="service-icon transition-colors" style={{ color: s.color }}>
-                        {s.icon}
-                      </span>
-                    </div>
-                    <span className="service-label text-[11px] font-semibold text-gray-700 text-center leading-tight">
-                      {L[s.key]}
-                    </span>
-                  </Link>
-                ))}
-              </div>
+            {/* Right: illustration */}
+            <div className="flex items-center justify-center p-6" style={{ background: "linear-gradient(135deg,#002b4e 0%,#004a88 100%)" }}>
+              <svg viewBox="0 0 300 200" className="w-full max-w-xs" xmlns="http://www.w3.org/2000/svg">
+                {/* Monitor */}
+                <rect x="60" y="40" width="180" height="120" rx="8" fill="#1a3a6e" stroke="#4a7ab8" strokeWidth="2"/>
+                <rect x="72" y="52" width="156" height="96" rx="4" fill="#0a1f3a"/>
+                {/* Screen content */}
+                <rect x="80" y="60" width="70" height="8" rx="2" fill="#00579f" opacity=".8"/>
+                <rect x="80" y="74" width="100" height="4" rx="2" fill="#3a6aaa" opacity=".5"/>
+                <rect x="80" y="84" width="80" height="4" rx="2" fill="#3a6aaa" opacity=".4"/>
+                <rect x="80" y="94" width="60" height="4" rx="2" fill="#3a6aaa" opacity=".3"/>
+                <rect x="165" y="60" width="55" height="55" rx="4" fill="#002244" opacity=".8"/>
+                <circle cx="192" cy="80" r="12" fill="#e8a820" opacity=".7"/>
+                <rect x="183" y="96" width="18" height="3" rx="1" fill="#4a7ab8"/>
+                <rect x="80" y="108" width="140" height="30" rx="4" fill="#002244" opacity=".5"/>
+                <rect x="86" y="114" width="40" height="12" rx="3" fill="#00579f" opacity=".8"/>
+                <rect x="132" y="114" width="40" height="12" rx="3" fill="#006633" opacity=".8"/>
+                {/* Stand */}
+                <rect x="130" y="160" width="40" height="10" rx="3" fill="#1a3a6e"/>
+                <rect x="110" y="168" width="80" height="6" rx="3" fill="#2a4a7e"/>
+              </svg>
             </div>
           </div>
+        </div>
+
+        {/* Service cards grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          {SERVICES.map((svc, i) => (
+            <Link key={i} href={svc.href}>
+              <div className="service-card group">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style={{ background: svc.bg, color: svc.color }}
+                >
+                  {svc.icon}
+                </div>
+                <div className="text-[#1a2332] font-semibold text-[12px] leading-tight">
+                  {t(svc.label, locale)}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

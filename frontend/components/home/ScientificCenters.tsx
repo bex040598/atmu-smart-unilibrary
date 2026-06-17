@@ -1,146 +1,72 @@
 "use client";
-
 import { useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { ArrowRight } from "lucide-react";
 
 type Locale = "uz" | "ru" | "en" | "tr";
-
-const T: Record<Locale, Record<string, string>> = {
-  uz: {
-    tag: "Markazlar",
-    title: "Ilmiy markazlar",
-    more: "Batafsil",
-    all: "Barcha markazlar",
-  },
-  ru: {
-    tag: "Центры",
-    title: "Научные центры",
-    more: "Подробнее",
-    all: "Все центры",
-  },
-  en: {
-    tag: "Centers",
-    title: "Scientific Centers",
-    more: "Details",
-    all: "All centers",
-  },
-  tr: {
-    tag: "Merkezler",
-    title: "Bilim Merkezleri",
-    more: "Detaylar",
-    all: "Tüm merkezler",
-  },
-};
+const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
 const CENTERS = [
   {
-    id: 1,
-    icon: "💻",
-    color: "#1457A8",
-    titleUz: "Raqamli ta'lim texnologiyalari markazi",
-    titleRu: "Центр цифровых образовательных технологий",
-    titleEn: "Center of Digital Educational Technologies",
-    titleTr: "Dijital Eğitim Teknolojileri Merkezi",
-    descUz: "Raqamli ta'lim platformalari, onlayn o'quv resurslari va zamonaviy pedagogika texnologiyalarini tadqiq etish va joriy etish bo'yicha faoliyat yuritadi.",
-    descRu: "Занимается исследованием и внедрением цифровых образовательных платформ, онлайн-учебных ресурсов и современных педагогических технологий.",
-    descEn: "Engaged in researching and implementing digital educational platforms, online learning resources and modern pedagogical technologies.",
-    descTr: "Dijital eğitim platformları, çevrimiçi öğrenme kaynakları ve modern pedagojik teknolojilerin araştırılması ve uygulanmasıyla ilgilenmektedir.",
-    bg: "linear-gradient(135deg, #061B3A, #1457A8)",
+    bg: "#003a6e",
+    accentBg: "#00579f",
+    num: "01",
+    title: { uz: "Raqamli ta'lim texnologiyalari markazi", ru: "Центр цифровых образовательных технологий", en: "Center of Digital Educational Technologies", tr: "Dijital Eğitim Teknolojileri Merkezi" },
+    desc: { uz: "E-learning, LMS tizimlar va raqamli o'quv materiallar yaratish metodologiyasi ustida ilmiy tadqiqotlar olib boradi", ru: "Проводит научные исследования в области e-learning, LMS-систем и методологии создания цифровых учебных материалов", en: "Conducts research on e-learning, LMS systems and digital learning material creation methodology", tr: "E-öğrenme, LMS sistemleri ve dijital öğrenme materyali oluşturma metodolojisi üzerine araştırmalar yürütür" },
   },
   {
-    id: 2,
-    icon: "🤖",
-    color: "#7C3AED",
-    titleUz: "Sun'iy intellekt va ma'lumotlar tahlili laboratoriyasi",
-    titleRu: "Лаборатория ИИ и анализа данных",
-    titleEn: "AI and Data Analysis Laboratory",
-    titleTr: "YZ ve Veri Analizi Laboratuvarı",
-    descUz: "Mashinaviy o'rganish, ma'lumotlar tahlili, neyron tarmoqlar va amaliy sun'iy intellekt yechimlari ustida ilmiy tadqiqotlar olib boradi.",
-    descRu: "Проводит научные исследования в области машинного обучения, анализа данных, нейронных сетей и прикладных решений ИИ.",
-    descEn: "Conducts scientific research in machine learning, data analysis, neural networks and applied AI solutions.",
-    descTr: "Makine öğrenimi, veri analizi, sinir ağları ve uygulamalı YZ çözümleri alanında bilimsel araştırmalar yürütür.",
-    bg: "linear-gradient(135deg, #1A0B2E, #7C3AED)",
+    bg: "#1a2a4e",
+    accentBg: "#8855cc",
+    num: "02",
+    title: { uz: "Sun'iy intellekt va ma'lumotlar tahlili laboratoriyasi", ru: "Лаборатория искусственного интеллекта и анализа данных", en: "AI and Data Analytics Laboratory", tr: "Yapay Zeka ve Veri Analitiği Laboratuvarı" },
+    desc: { uz: "Machine learning, NLP va big data texnologiyalari asosida ta'lim sohasida AI yechimlarini ishlab chiqadi", ru: "Разрабатывает AI-решения в образовании на основе machine learning, NLP и big data технологий", en: "Develops AI solutions in education based on machine learning, NLP and big data technologies", tr: "Makine öğrenimi, NLP ve büyük veri teknolojilerine dayalı eğitimde AI çözümleri geliştirir" },
   },
   {
-    id: 3,
-    icon: "📚",
-    color: "#0E9F6E",
-    titleUz: "Elektron kutubxona va akademik resurslar markazi",
-    titleRu: "Центр электронной библиотеки и академических ресурсов",
-    titleEn: "Center of E-Library and Academic Resources",
-    titleTr: "E-Kütüphane ve Akademik Kaynaklar Merkezi",
-    descUz: "Elektron kutubxona fondini shakllantirish, akademik resurslarni kataloglashtirish, bibliografik xizmatlar va ilmiy axborot ta'minoti bilan shug'ullanadi.",
-    descRu: "Занимается формированием фонда электронной библиотеки, каталогизацией академических ресурсов, библиографическими услугами и научным информационным обеспечением.",
-    descEn: "Engaged in forming the electronic library fund, cataloging academic resources, bibliographic services and scientific information support.",
-    descTr: "Elektronik kütüphane fonunun oluşturulması, akademik kaynakların kataloglanması, bibliyografik hizmetler ve bilimsel bilgi desteğiyle ilgilenmektedir.",
-    bg: "linear-gradient(135deg, #0A2A1A, #0E9F6E)",
+    bg: "#0d3d2a",
+    accentBg: "#00a050",
+    num: "03",
+    title: { uz: "Elektron kutubxona va akademik resurslar markazi", ru: "Центр электронной библиотеки и академических ресурсов", en: "E-Library and Academic Resources Center", tr: "E-Kütüphane ve Akademik Kaynaklar Merkezi" },
+    desc: { uz: "Kutubxona fondini raqamlashtirish, elektron resurslarni kataloglash va bibliometrik tahlillar sohasida faoliyat yuritadi", ru: "Занимается оцифровкой библиотечного фонда, каталогизацией электронных ресурсов и библиометрическим анализом", en: "Works on library fund digitization, e-resource cataloging and bibliometric analyses", tr: "Kütüphane fonu sayısallaştırma, e-kaynak kataloglama ve bibliyometrik analizler üzerinde çalışır" },
   },
 ];
 
 export default function ScientificCenters() {
   const locale = useLocale() as Locale;
-  const L = T[locale] || T.uz;
-
-  const getTitle = (c: typeof CENTERS[0]) => {
-    if (locale === "ru") return c.titleRu;
-    if (locale === "en") return c.titleEn;
-    if (locale === "tr") return c.titleTr;
-    return c.titleUz;
-  };
-
-  const getDesc = (c: typeof CENTERS[0]) => {
-    if (locale === "ru") return c.descRu;
-    if (locale === "en") return c.descEn;
-    if (locale === "tr") return c.descTr;
-    return c.descUz;
-  };
+  const titleLabel = locale === "uz" ? "Ilmiy markazlar" : locale === "ru" ? "Научные центры" : locale === "tr" ? "Araştırma Merkezleri" : "Research Centers";
+  const detailsLabel = locale === "uz" ? "Batafsil" : locale === "ru" ? "Подробнее" : locale === "tr" ? "Detaylar" : "Details";
 
   return (
-    <section style={{ background: "linear-gradient(135deg, #061B3A 0%, #0B3D73 60%, #1058A0 100%)" }} className="py-14">
-      <div className="max-w-[1280px] mx-auto px-4">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <div className="inline-flex items-center gap-2 text-yellow-300/70 text-[11px] font-bold uppercase tracking-widest mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-              {L.tag}
-            </div>
-            <h2 className="text-white text-2xl lg:text-3xl font-bold">{L.title}</h2>
-            <div className="w-10 h-0.5 bg-yellow-400/50 mt-3 rounded-full" />
+    <section className="py-14" style={{ background: "#001a38" }}>
+      <div className="max-w-[1680px] mx-auto px-5 sm:px-8">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-8 h-px bg-[#e8a820]" />
+            <span className="text-[#e8a820] text-[11px] font-bold uppercase tracking-widest">{titleLabel}</span>
+            <span className="w-8 h-px bg-[#e8a820]" />
           </div>
-          <Link href="/science/centers" className="hidden sm:flex items-center gap-1.5 text-yellow-300 text-sm font-semibold hover:gap-2.5 transition-all">
-            {L.all} <ArrowRight size={14} />
-          </Link>
+          <h2 style={{ color: "#fff", fontFamily: "'Georgia',serif", fontSize: "clamp(22px,2.5vw,36px)", fontWeight: 800 }}>{titleLabel}</h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-5">
-          {CENTERS.map((c) => (
-            <div key={c.id} className="rounded-2xl overflow-hidden group cursor-pointer">
-              {/* Image area */}
-              <div className="h-44 relative" style={{ background: c.bg }}>
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-4 right-4 w-32 h-32 rounded-full border border-white" />
-                  <div className="absolute bottom-4 left-4 w-20 h-20 rounded-full border border-white/50" />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-6xl opacity-30">{c.icon}</span>
-                </div>
-                <div className="absolute bottom-4 left-4 text-5xl">{c.icon}</div>
-              </div>
-              {/* Content */}
-              <div
-                className="p-5 border border-white/10 rounded-b-2xl"
-                style={{ background: "rgba(255,255,255,0.06)" }}
-              >
-                <h3 className="text-white font-bold text-[14px] leading-snug mb-3 group-hover:text-yellow-300 transition-colors">
-                  {getTitle(c)}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {CENTERS.map((c, i) => (
+            <div
+              key={i}
+              className="rounded-2xl overflow-hidden border border-white/10 group cursor-pointer transition-all hover:-translate-y-1 hover:border-white/25"
+              style={{ background: c.bg }}
+            >
+              {/* Top accent */}
+              <div className="h-1.5" style={{ background: c.accentBg }} />
+
+              <div className="p-6 sm:p-7">
+                <div className="text-[#e8a820]/30 font-black text-5xl mb-5 leading-none">{c.num}</div>
+                <h3 className="text-white font-bold leading-snug mb-4" style={{ fontSize: "clamp(14px,1.2vw,17px)" }}>
+                  {t(c.title, locale)}
                 </h3>
-                <p className="text-white/55 text-[12px] leading-relaxed mb-4">
-                  {getDesc(c)}
+                <p className="text-white/50 text-[13px] leading-relaxed mb-5">
+                  {t(c.desc, locale)}
                 </p>
-                <span className="inline-flex items-center gap-1.5 text-yellow-300 text-[12px] font-semibold hover:gap-2.5 transition-all">
-                  {L.more} <ArrowRight size={12} />
-                </span>
+                <button className="flex items-center gap-1.5 text-[13px] font-semibold transition-all group-hover:gap-3" style={{ color: c.accentBg === "#00579f" ? "#60aaff" : c.accentBg === "#8855cc" ? "#bb99ff" : "#44cc88" }}>
+                  {detailsLabel} <ArrowRight size={14} />
+                </button>
               </div>
             </div>
           ))}

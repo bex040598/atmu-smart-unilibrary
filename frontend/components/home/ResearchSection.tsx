@@ -1,106 +1,99 @@
 "use client";
-
 import { useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 type Locale = "uz" | "ru" | "en" | "tr";
+const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
-const T: Record<Locale, Record<string, string>> = {
-  uz: {
-    tag: "Ilmiy faoliyat",
-    title: "Tadqiqotlar",
-    text: "ATMU ilmiy markazlari va kafedralari axborot texnologiyalari, ta'lim metodologiyasi, iqtisodiyot va ijtimoiy fanlar sohasida fundamental va amaliy tadqiqotlar olib boradi. Tadqiqot natijalari xalqaro ilmiy jurnallarda, konferensiyalarda va dissertatsiyalar shaklida chop etiladi.",
-    btn: "Ilmiy markazlar",
-    s1_label: "Ilmiy markazlar",
-    s2_label: "Kutubxona fondi",
-    s3_label: "Elektron resurslar",
-    s4_label: "Maqolalar",
-    s5_label: "Dissertatsiyalar",
-  },
-  ru: {
-    tag: "Научная деятельность",
-    title: "Исследования",
-    text: "Научные центры и кафедры АТМУ проводят фундаментальные и прикладные исследования в области информационных технологий, методологии образования, экономики и социальных наук. Результаты исследований публикуются в международных научных журналах, конференциях и в форме диссертаций.",
-    btn: "Научные центры",
-    s1_label: "Научных центров",
-    s2_label: "Фонд библиотеки",
-    s3_label: "Эл. ресурсов",
-    s4_label: "Статей",
-    s5_label: "Диссертаций",
-  },
-  en: {
-    tag: "Scientific Activity",
-    title: "Research",
-    text: "ATMU scientific centers and departments conduct fundamental and applied research in information technologies, educational methodology, economics and social sciences. Research results are published in international scientific journals, conferences and as dissertations.",
-    btn: "Scientific Centers",
-    s1_label: "Scientific Centers",
-    s2_label: "Library Fund",
-    s3_label: "E-Resources",
-    s4_label: "Articles",
-    s5_label: "Dissertations",
-  },
-  tr: {
-    tag: "Bilimsel Faaliyet",
-    title: "Araştırmalar",
-    text: "ATMU bilim merkezleri ve bölümleri, bilgi teknolojileri, eğitim metodolojisi, ekonomi ve sosyal bilimler alanında temel ve uygulamalı araştırmalar yürütmektedir. Araştırma sonuçları uluslararası bilimsel dergilerde, konferanslarda ve tez olarak yayımlanmaktadır.",
-    btn: "Bilim Merkezleri",
-    s1_label: "Bilim Merkezi",
-    s2_label: "Kütüphane Fonu",
-    s3_label: "E-Kaynak",
-    s4_label: "Makale",
-    s5_label: "Tez",
-  },
-};
+function AnimNum({ target, dur = 1600 }: { target: number; dur?: number }) {
+  const [cur, setCur] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) {
+        started.current = true;
+        const s = Date.now();
+        const tick = () => {
+          const p = Math.min((Date.now() - s) / dur, 1);
+          setCur(Math.round((1 - Math.pow(1 - p, 3)) * target));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.3 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [target, dur]);
+  return <span ref={ref}>{cur.toLocaleString()}</span>;
+}
 
 const STATS = [
-  { key: "s1_label", value: "3" },
-  { key: "s2_label", value: "8 420" },
-  { key: "s3_label", value: "1 247" },
-  { key: "s4_label", value: "326" },
-  { key: "s5_label", value: "42" },
+  {
+    val: 3, suffix: "",
+    label: { uz: "Ilmiy markazlar", ru: "Научных центров", en: "Research Centers", tr: "Araştırma Merkezi" },
+    icon: <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><path d="M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>,
+  },
+  {
+    val: 8420, suffix: "+",
+    label: { uz: "Kutubxona fondi", ru: "Книжный фонд", en: "Library Fund", tr: "Kütüphane Fonu" },
+    icon: <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>,
+  },
+  {
+    val: 1247, suffix: "+",
+    label: { uz: "Elektron resurslar", ru: "Электронных ресурсов", en: "E-Resources", tr: "Elektronik Kaynak" },
+    icon: <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>,
+  },
+  {
+    val: 326, suffix: "+",
+    label: { uz: "Ilmiy maqolalar", ru: "Научных статей", en: "Scientific Articles", tr: "Bilimsel Makale" },
+    icon: <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>,
+  },
+  {
+    val: 42, suffix: "+",
+    label: { uz: "Dissertatsiyalar", ru: "Диссертаций", en: "Dissertations", tr: "Tez" },
+    icon: <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>,
+  },
 ];
 
 export default function ResearchSection() {
   const locale = useLocale() as Locale;
-  const L = T[locale] || T.uz;
+  const titleLabel = locale === "uz" ? "Tadqiqotlar" : locale === "ru" ? "Исследования" : locale === "tr" ? "Araştırmalar" : "Research";
+  const desc = locale === "uz"
+    ? "ATMU olimlari va tadqiqotchilari zamonaviy raqamli texnologiyalar, sun'iy intellekt va elektron kutubxona sohasida faol ilmiy faoliyat olib boradi."
+    : locale === "ru"
+    ? "Учёные и исследователи АТМУ ведут активную научную деятельность в области современных цифровых технологий, искусственного интеллекта и электронных библиотек."
+    : locale === "tr"
+    ? "ATMU bilim insanları ve araştırmacıları modern dijital teknolojiler, yapay zeka ve elektronik kütüphane alanlarında aktif bilimsel faaliyetler yürütür."
+    : "ATMU scientists and researchers conduct active scientific activities in modern digital technologies, artificial intelligence and electronic library fields.";
 
   return (
-    <section style={{ background: "linear-gradient(135deg, #030C18 0%, #061B3A 40%, #0B3D73 100%)" }} className="py-14">
-      <div className="max-w-[1280px] mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 text-yellow-300/70 text-[11px] font-bold uppercase tracking-widest mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse-slow" />
-              {L.tag}
-            </div>
-            <h2 className="text-white text-3xl lg:text-4xl font-bold mb-5 leading-tight">
-              {L.title}
-            </h2>
-            <div className="w-10 h-0.5 bg-yellow-400/50 mb-6 rounded-full" />
-            <p className="text-white/60 text-[15px] leading-7 mb-7">
-              {L.text}
-            </p>
-            <Link
-              href="/science/centers"
-              className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-[#061B3A] font-bold px-6 py-3 rounded-xl text-sm transition-colors"
-            >
-              {L.btn} <ArrowRight size={14} />
-            </Link>
+    <section className="section-dark py-16">
+      <div className="max-w-[1680px] mx-auto px-5 sm:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <span className="w-8 h-px bg-[#e8a820]" />
+            <span className="text-[#e8a820] text-[11px] font-bold uppercase tracking-widest">{locale === "uz" ? "Ilmiy faoliyat" : locale === "ru" ? "Научная деятельность" : "Research Activity"}</span>
+            <span className="w-8 h-px bg-[#e8a820]" />
           </div>
+          <h2 style={{ color: "#fff", fontFamily: "'Georgia',serif", fontSize: "clamp(24px,3vw,40px)", fontWeight: 800, marginBottom: "16px" }}>{titleLabel}</h2>
+          <p style={{ color: "rgba(255,255,255,.55)", maxWidth: "700px", margin: "0 auto", lineHeight: 1.75, fontSize: "clamp(13px,1.1vw,16px)" }}>{desc}</p>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {STATS.map((s, i) => (
-              <div
-                key={i}
-                className={`rounded-2xl p-5 border border-white/10 text-center hover:border-yellow-400/30 transition-all ${i === 4 ? "col-span-2 sm:col-span-1" : ""}`}
-                style={{ background: "rgba(255,255,255,0.05)" }}
-              >
-                <div className="text-white font-bold text-3xl stat-counter mb-1">{s.value}</div>
-                <div className="text-white/50 text-[11px]">{L[s.key]}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 border border-white/10 rounded-2xl overflow-hidden">
+          {STATS.map((s, i) => (
+            <div
+              key={i}
+              className={`flex flex-col items-center text-center px-4 py-10 ${i < STATS.length - 1 ? "border-r border-white/08" : ""}`}
+              style={{ background: i % 2 === 0 ? "rgba(255,255,255,.03)" : "transparent" }}
+            >
+              <div className="text-[#e8a820]/60 mb-4">{s.icon}</div>
+              <div className="text-white font-black mb-1.5" style={{ fontSize: "clamp(28px,3vw,44px)", lineHeight: 1 }}>
+                <AnimNum target={s.val} />{s.suffix}
               </div>
-            ))}
-          </div>
+              <div className="text-white/40 text-[11px] font-medium uppercase tracking-wide leading-tight">{t(s.label, locale)}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

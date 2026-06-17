@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 720" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#001d3d"/>
+      <stop offset="60%" stop-color="#003a6e"/>
+      <stop offset="100%" stop-color="#00579f"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a1a"/>
+      <stop offset="100%" stop-color="#0d2610"/>
+    </linearGradient>
+    <linearGradient id="building1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4e4f7"/>
+      <stop offset="100%" stop-color="#a8c8e8"/>
+    </linearGradient>
+    <linearGradient id="building2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8ddf0"/>
+      <stop offset="100%" stop-color="#9ab8d8"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="75%" cy="25%" r="20%">
+      <stop offset="0%" stop-color="#e8c060" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#e8c060" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1920" height="720" fill="url(#sky)"/>
+
+  <!-- Sun glow -->
+  <ellipse cx="1440" cy="180" rx="300" ry="300" fill="url(#sun)"/>
+
+  <!-- Clouds -->
+  <g opacity="0.15" fill="white">
+    <ellipse cx="300" cy="120" rx="120" ry="40"/>
+    <ellipse cx="220" cy="130" rx="80" ry="35"/>
+    <ellipse cx="380" cy="125" rx="90" ry="32"/>
+    <ellipse cx="900" cy="80" rx="100" ry="32"/>
+    <ellipse cx="830" cy="90" rx="70" ry="28"/>
+    <ellipse cx="970" cy="85" rx="80" ry="28"/>
+    <ellipse cx="1600" cy="100" rx="130" ry="38"/>
+    <ellipse cx="1520" cy="110" rx="90" ry="32"/>
+  </g>
+
+  <!-- Ground -->
+  <rect x="0" y="560" width="1920" height="160" fill="url(#ground)"/>
+
+  <!-- Lawn -->
+  <ellipse cx="960" cy="560" rx="960" ry="40" fill="#1e4620"/>
+
+  <!-- Trees left -->
+  <g fill="#1a4a1a">
+    <ellipse cx="80" cy="480" rx="45" ry="55"/>
+    <rect x="75" y="520" width="10" height="40" fill="#5d3a1a"/>
+    <ellipse cx="150" cy="500" rx="38" ry="48"/>
+    <rect x="145" y="535" width="10" height="25" fill="#5d3a1a"/>
+    <ellipse cx="220" cy="490" rx="42" ry="52"/>
+    <rect x="215" y="528" width="10" height="32" fill="#5d3a1a"/>
+  </g>
+
+  <!-- Trees right -->
+  <g fill="#1a4a1a">
+    <ellipse cx="1840" cy="480" rx="45" ry="55"/>
+    <rect x="1835" y="520" width="10" height="40" fill="#5d3a1a"/>
+    <ellipse cx="1770" cy="495" rx="40" ry="50"/>
+    <rect x="1765" y="532" width="10" height="28" fill="#5d3a1a"/>
+    <ellipse cx="1700" cy="488" rx="38" ry="48"/>
+    <rect x="1695" y="524" width="10" height="36" fill="#5d3a1a"/>
+  </g>
+
+  <!-- Main Building - Left Wing -->
+  <g transform="translate(200,180)">
+    <rect x="0" y="0" width="320" height="380" fill="url(#building1)"/>
+    <!-- windows -->
+    <g fill="rgba(100,160,220,0.6)">
+      <rect x="20" y="30" width="50" height="35" rx="3"/>
+      <rect x="90" y="30" width="50" height="35" rx="3"/>
+      <rect x="160" y="30" width="50" height="35" rx="3"/>
+      <rect x="230" y="30" width="50" height="35" rx="3"/>
+      <rect x="20" y="90" width="50" height="35" rx="3"/>
+      <rect x="90" y="90" width="50" height="35" rx="3"/>
+      <rect x="160" y="90" width="50" height="35" rx="3"/>
+      <rect x="230" y="90" width="50" height="35" rx="3"/>
+      <rect x="20" y="150" width="50" height="35" rx="3"/>
+      <rect x="90" y="150" width="50" height="35" rx="3"/>
+      <rect x="160" y="150" width="50" height="35" rx="3"/>
+      <rect x="230" y="150" width="50" height="35" rx="3"/>
+      <rect x="20" y="210" width="50" height="35" rx="3"/>
+      <rect x="90" y="210" width="50" height="35" rx="3"/>
+      <rect x="160" y="210" width="50" height="35" rx="3"/>
+      <rect x="230" y="210" width="50" height="35" rx="3"/>
+    </g>
+    <!-- roof -->
+    <polygon points="0,0 160,-40 320,0" fill="#8aa8c8"/>
+    <!-- flag -->
+    <rect x="155" y="-80" width="4" height="60" fill="#6688aa"/>
+    <polygon points="159,-80 200,-60 159,-40" fill="#e8a820"/>
+  </g>
+
+  <!-- Main Building - Center (tallest) -->
+  <g transform="translate(660,80)">
+    <rect x="0" y="0" width="600" height="480" fill="url(#building1)"/>
+    <!-- center arch entrance -->
+    <rect x="240" y="380" width="120" height="100" fill="#8aaecc"/>
+    <path d="M240,380 Q300,340 360,380" fill="#7098b8"/>
+    <!-- windows 5 rows x 6 cols -->
+    <g fill="rgba(120,180,240,0.65)">
+      <rect x="20" y="30" width="65" height="45" rx="4"/>
+      <rect x="115" y="30" width="65" height="45" rx="4"/>
+      <rect x="210" y="30" width="65" height="45" rx="4"/>
+      <rect x="305" y="30" width="65" height="45" rx="4"/>
+      <rect x="400" y="30" width="65" height="45" rx="4"/>
+      <rect x="495" y="30" width="65" height="45" rx="4"/>
+      <rect x="20" y="105" width="65" height="45" rx="4"/>
+      <rect x="115" y="105" width="65" height="45" rx="4"/>
+      <rect x="210" y="105" width="65" height="45" rx="4"/>
+      <rect x="305" y="105" width="65" height="45" rx="4"/>
+      <rect x="400" y="105" width="65" height="45" rx="4"/>
+      <rect x="495" y="105" width="65" height="45" rx="4"/>
+      <rect x="20" y="180" width="65" height="45" rx="4"/>
+      <rect x="115" y="180" width="65" height="45" rx="4"/>
+      <rect x="305" y="180" width="65" height="45" rx="4"/>
+      <rect x="400" y="180" width="65" height="45" rx="4"/>
+      <rect x="495" y="180" width="65" height="45" rx="4"/>
+      <rect x="20" y="255" width="65" height="45" rx="4"/>
+      <rect x="115" y="255" width="65" height="45" rx="4"/>
+      <rect x="210" y="255" width="65" height="45" rx="4"/>
+      <rect x="305" y="255" width="65" height="45" rx="4"/>
+      <rect x="400" y="255" width="65" height="45" rx="4"/>
+      <rect x="495" y="255" width="65" height="45" rx="4"/>
+    </g>
+    <!-- classical columns -->
+    <g fill="#b8cce0">
+      <rect x="80" y="350" width="18" height="130"/>
+      <rect x="160" y="350" width="18" height="130"/>
+      <rect x="400" y="350" width="18" height="130"/>
+      <rect x="480" y="350" width="18" height="130"/>
+    </g>
+    <!-- decorative top -->
+    <rect x="0" y="-20" width="600" height="20" fill="#a0bcd8"/>
+    <polygon points="0,-20 300,-60 600,-20" fill="#8fb0cc"/>
+    <!-- flag pole -->
+    <rect x="296" y="-100" width="8" height="80" fill="#6888a8"/>
+    <polygon points="304,-100 360,-80 304,-60" fill="#0000a0"/>
+    <polygon points="304,-60 360,-40 304,-20" fill="#ff0000"/>
+  </g>
+
+  <!-- Main Building - Right Wing -->
+  <g transform="translate(1400,200)">
+    <rect x="0" y="0" width="320" height="360" fill="url(#building2)"/>
+    <g fill="rgba(100,160,220,0.6)">
+      <rect x="20" y="30" width="50" height="35" rx="3"/>
+      <rect x="90" y="30" width="50" height="35" rx="3"/>
+      <rect x="160" y="30" width="50" height="35" rx="3"/>
+      <rect x="230" y="30" width="50" height="35" rx="3"/>
+      <rect x="20" y="90" width="50" height="35" rx="3"/>
+      <rect x="90" y="90" width="50" height="35" rx="3"/>
+      <rect x="160" y="90" width="50" height="35" rx="3"/>
+      <rect x="230" y="90" width="50" height="35" rx="3"/>
+      <rect x="20" y="150" width="50" height="35" rx="3"/>
+      <rect x="90" y="150" width="50" height="35" rx="3"/>
+      <rect x="160" y="150" width="50" height="35" rx="3"/>
+      <rect x="230" y="150" width="50" height="35" rx="3"/>
+      <rect x="20" y="210" width="50" height="35" rx="3"/>
+      <rect x="90" y="210" width="50" height="35" rx="3"/>
+      <rect x="160" y="210" width="50" height="35" rx="3"/>
+      <rect x="230" y="210" width="50" height="35" rx="3"/>
+    </g>
+    <polygon points="0,0 160,-35 320,0" fill="#8aa8c8"/>
+  </g>
+
+  <!-- Road/Path -->
+  <path d="M700,720 Q960,560 1220,720" stroke="#2a3a2a" stroke-width="40" fill="none" opacity="0.6"/>
+
+  <!-- Fountain -->
+  <ellipse cx="960" cy="570" rx="60" ry="25" fill="#1a4a8a" opacity="0.6"/>
+  <rect x="954" y="530" width="12" height="40" fill="#2a5a9a" opacity="0.7"/>
+  <ellipse cx="960" cy="530" rx="30" ry="10" fill="#3a7acc" opacity="0.5"/>
+
+  <!-- Flag poles left -->
+  <rect x="580" y="450" width="5" height="110" fill="#6888a8"/>
+  <polygon points="585,450 630,465 585,480" fill="#00a050" opacity="0.9"/>
+  <rect x="620" y="455" width="5" height="105" fill="#6888a8"/>
+  <polygon points="625,455 680,470 625,485" fill="#0050c0" opacity="0.9"/>
+
+  <!-- Flag poles right -->
+  <rect x="1290" y="450" width="5" height="110" fill="#6888a8"/>
+  <polygon points="1295,450 1340,465 1295,480" fill="#c00000" opacity="0.9"/>
+  <rect x="1330" y="455" width="5" height="105" fill="#6888a8"/>
+  <polygon points="1335,455 1390,470 1335,485" fill="#00a050" opacity="0.9"/>
+
+  <!-- Overlay gradient for text readability -->
+  <linearGradient id="textOverlay" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#001428" stop-opacity="0.55"/>
+    <stop offset="40%" stop-color="#001d3d" stop-opacity="0.35"/>
+    <stop offset="75%" stop-color="#001428" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="#001428" stop-opacity="0.85"/>
+  </linearGradient>
+  <rect width="1920" height="720" fill="url(#textOverlay)"/>
+</svg>

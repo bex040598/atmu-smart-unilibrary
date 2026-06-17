@@ -1,145 +1,93 @@
 "use client";
-
 import { useLocale } from "next-intl";
 
 type Locale = "uz" | "ru" | "en" | "tr";
-
-const T: Record<Locale, Record<string, string>> = {
-  uz: {
-    tag: "Talaba hayoti",
-    title: "Talabaning hayoti",
-    subtitle: "Universitetda talabalar uchun ta'lim, ilmiy izlanish, ijodiy faoliyat va raqamli xizmatlardan foydalanish bo'yicha qulay muhit yaratilgan.",
-    quote: "Elektron kutubxona va AI qidiruv xizmatlari darsliklar, laboratoriya ishlari va ilmiy manbalarni tez topishimga yordam beradi. Har bir kafedra uchun alohida resurslar mavjud bo'lgani juda qulay.",
-    student_name: "Aziz Karimov",
-    student_role: "ATMU, 3-kurs talabasi",
-    card1: "Ilmiy tadqiqotlar",
-    card2: "Raqamli ta'lim",
-    card3: "Ijodiy faoliyat",
-    card4: "Kutubxona xizmatlari",
-  },
-  ru: {
-    tag: "Студенческая жизнь",
-    title: "Жизнь студента",
-    subtitle: "В университете создана комфортная среда для обучения, научных исследований, творческой деятельности и использования цифровых сервисов.",
-    quote: "Электронная библиотека и сервис поиска ИИ помогают быстро находить учебники, лабораторные работы и научные источники. Очень удобно, что для каждой кафедры есть отдельные ресурсы.",
-    student_name: "Азиз Каримов",
-    student_role: "АТМУ, студент 3 курса",
-    card1: "Научные исследования",
-    card2: "Цифровое образование",
-    card3: "Творческая деятельность",
-    card4: "Библиотечные услуги",
-  },
-  en: {
-    tag: "Student Life",
-    title: "Student Life",
-    subtitle: "The university provides a comfortable environment for education, scientific research, creative activities, and use of digital services.",
-    quote: "The electronic library and AI search service help me quickly find textbooks, laboratory works and scientific sources. It is very convenient that there are separate resources for each department.",
-    student_name: "Aziz Karimov",
-    student_role: "ATMU, 3rd year student",
-    card1: "Scientific Research",
-    card2: "Digital Education",
-    card3: "Creative Activities",
-    card4: "Library Services",
-  },
-  tr: {
-    tag: "Öğrenci Hayatı",
-    title: "Öğrencinin Hayatı",
-    subtitle: "Üniversite, eğitim, bilimsel araştırma, yaratıcı faaliyet ve dijital hizmetlerden yararlanmak için uygun bir ortam yaratmıştır.",
-    quote: "Elektronik kütüphane ve AI arama hizmeti, ders kitaplarını, laboratuvar çalışmalarını ve bilimsel kaynakları hızlı bulmama yardımcı oluyor. Her bölüm için ayrı kaynakların olması çok elverişli.",
-    student_name: "Aziz Karimov",
-    student_role: "ATMU, 3. sınıf öğrencisi",
-    card1: "Bilimsel Araştırma",
-    card2: "Dijital Eğitim",
-    card3: "Yaratıcı Faaliyet",
-    card4: "Kütüphane Hizmetleri",
-  },
-};
+const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
 const CARDS = [
-  { key: "card1", bg: "linear-gradient(135deg, #061B3A, #1457A8)", icon: "🔬" },
-  { key: "card2", bg: "linear-gradient(135deg, #0B3D73, #008C95)", icon: "💻" },
-  { key: "card3", bg: "linear-gradient(135deg, #2D1B69, #7C3AED)", icon: "🎨" },
-  { key: "card4", bg: "linear-gradient(135deg, #1A0A00, #D6A84F)", icon: "📚" },
+  { bg: "#003a6e", title: { uz: "Ilmiy tadqiqotlar", ru: "Научные исследования", en: "Research", tr: "Araştırma" }, desc: { uz: "Talabalar ilmiy markazlar va laboratoriyalarda amaliy tajriba oladi", ru: "Студенты получают практический опыт в научных центрах и лабораториях", en: "Students gain hands-on experience in research centers and labs", tr: "Öğrenciler araştırma merkezlerinde pratik deneyim kazanır" } },
+  { bg: "#0d3d2a", title: { uz: "Sport va madaniyat", ru: "Спорт и культура", en: "Sport & Culture", tr: "Spor & Kültür" }, desc: { uz: "Sport musobaqalari, madaniy tadbirlar va talabalar hayoti", ru: "Спортивные соревнования, культурные мероприятия и студенческая жизнь", en: "Sports competitions, cultural events and student life", tr: "Spor yarışmaları, kültürel etkinlikler ve öğrenci hayatı" } },
+  { bg: "#002b4e", title: { uz: "Smart UniLibrary", ru: "Smart UniLibrary", en: "Smart UniLibrary", tr: "Smart UniLibrary" }, desc: { uz: "Elektron katalog, AI qidiruv va o'quv zali bron qilish xizmatlari", ru: "Электронный каталог, ИИ-поиск и бронирование мест в читальном зале", en: "E-catalog, AI search and reading room seat booking services", tr: "E-katalog, AI arama ve okuma salonu rezervasyonu hizmetleri" } },
 ];
 
 export default function StudentLife() {
   const locale = useLocale() as Locale;
-  const L = T[locale] || T.uz;
+  const titleLabel = locale === "uz" ? "Talabaning hayoti" : locale === "ru" ? "Жизнь студента" : locale === "tr" ? "Öğrenci Hayatı" : "Student Life";
+  const quote = locale === "uz"
+    ? "Elektron kutubxona va AI qidiruv xizmatlari darsliklar, laboratoriya ishlari va ilmiy manbalarni tez topishimga yordam beradi. Bu tizim mening o'quv jarayonimni tubdan o'zgartirdi."
+    : locale === "ru"
+    ? "Электронная библиотека и ИИ-поиск помогают мне быстро находить учебники, лабораторные работы и научные источники. Эта система кардинально изменила мой учебный процесс."
+    : locale === "tr"
+    ? "Elektronik kütüphane ve AI arama hizmetleri ders kitapları, laboratuvar çalışmaları ve bilimsel kaynakları hızla bulmama yardımcı olur."
+    : "The electronic library and AI search help me quickly find textbooks, lab manuals and research sources. This system fundamentally changed my learning process.";
+  const author = locale === "uz" ? "Aziz Karimov" : locale === "ru" ? "Азиз Каримов" : "Aziz Karimov";
+  const role = locale === "uz" ? "ATMU, 3-kurs talabasi · Axborot texnologiyalari" : locale === "ru" ? "АТМУ, 3-й курс · Информационные технологии" : locale === "tr" ? "ATMU, 3. Sınıf · Bilgi Teknolojileri" : "ATMU, 3rd Year · Information Technologies";
 
   return (
     <section className="py-14 bg-white">
-      <div className="max-w-[1280px] mx-auto px-4">
+      <div className="max-w-[1680px] mx-auto px-5 sm:px-8">
         <div className="mb-8">
-          <div className="section-tag mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#1457A8]" />
-            {L.tag}
-          </div>
-          <h2 className="text-[#061B3A] text-2xl lg:text-3xl font-bold">{L.title}</h2>
+          <div className="section-tag mb-2"><span className="w-1.5 h-1.5 rounded-full bg-[#00579f]" />{locale === "uz" ? "Campus hayoti" : locale === "ru" ? "Жизнь кампуса" : "Campus Life"}</div>
+          <h2 className="section-blue-title">{titleLabel}</h2>
           <div className="section-divider mt-2" />
-          <p className="text-gray-500 text-sm mt-3 max-w-2xl">{L.subtitle}</p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
-          {/* 2 small left */}
+        {/* Mosaic grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Left: 2 stacked */}
           <div className="flex flex-col gap-4">
-            {CARDS.slice(0, 2).map((c) => (
+            {CARDS.slice(0, 2).map((card, i) => (
               <div
-                key={c.key}
-                className="flex-1 rounded-2xl overflow-hidden relative p-5 flex flex-col justify-end"
-                style={{ background: c.bg, minHeight: "140px" }}
+                key={i}
+                className="news-card flex-1 relative overflow-hidden"
+                style={{ background: card.bg, minHeight: 180 }}
               >
-                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-10 border border-white" style={{ transform: "translate(30%,-30%)" }} />
-                <div className="text-3xl mb-2">{c.icon}</div>
-                <div className="text-white font-semibold text-[13px]">{L[c.key]}</div>
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-10 bg-white" style={{ transform: "translate(30%,-30%)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 60%)" }} />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="text-white font-bold text-[14px] mb-1">{t(card.title, locale)}</div>
+                  <div className="text-white/60 text-[12px] line-clamp-2">{t(card.desc, locale)}</div>
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Center big */}
-          <div className="col-span-2 rounded-2xl overflow-hidden relative"
-            style={{ background: "linear-gradient(160deg, #061B3A 0%, #0B3D73 50%, #1457A8 100%)", minHeight: "300px" }}>
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-8 left-8 w-40 h-40 rounded-full border border-white" />
-              <div className="absolute bottom-8 right-8 w-60 h-60 rounded-full border border-white" />
-            </div>
-            <div className="relative h-full flex flex-col items-center justify-center p-8 text-center">
-              <div className="w-20 h-20 rounded-full mb-4 flex items-center justify-center text-4xl border-2 border-yellow-400/30"
-                style={{ background: "rgba(214,168,79,0.1)" }}>
-                🎓
-              </div>
-              <div className="text-yellow-400 font-bold text-base mb-1">ATMU</div>
-              <div className="text-white/60 text-xs mb-4">Smart University</div>
-              <div className="grid grid-cols-3 gap-4 w-full">
-                {[
-                  { v: "2 318", l: locale === "uz" ? "Talabalar" : locale === "ru" ? "Студентов" : locale === "tr" ? "Öğrenci" : "Students" },
-                  { v: "126", l: locale === "uz" ? "Ustoz" : locale === "ru" ? "Педагогов" : locale === "tr" ? "Öğretmen" : "Faculty" },
-                  { v: "48", l: locale === "uz" ? "Yo'nalish" : locale === "ru" ? "Направлений" : locale === "tr" ? "Program" : "Programs" },
-                ].map((s) => (
-                  <div key={s.l} className="text-center">
-                    <div className="text-white font-bold text-xl">{s.v}+</div>
-                    <div className="text-white/50 text-[10px]">{s.l}</div>
-                  </div>
-                ))}
-              </div>
+          {/* Center: large */}
+          <div
+            className="news-card relative overflow-hidden"
+            style={{ background: CARDS[2].bg, minHeight: 380 }}
+          >
+            <div className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-10 bg-white" style={{ transform: "translate(30%,-30%)" }} />
+            <div className="absolute bottom-0 left-0 w-28 h-28 rounded-full opacity-10 bg-white" style={{ transform: "translate(-30%,30%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.1) 60%,transparent 100%)" }} />
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div className="text-white font-bold text-lg mb-2">{t(CARDS[2].title, locale)}</div>
+              <div className="text-white/65 text-[13px] leading-relaxed">{t(CARDS[2].desc, locale)}</div>
             </div>
           </div>
 
-          {/* Right — testimonial */}
-          <div className="rounded-2xl border border-gray-100 p-5 flex flex-col"
-            style={{ background: "linear-gradient(160deg, #F8FAFF, #EFF6FF)" }}>
-            <div className="flex-1">
-              <div className="text-[#1457A8] text-3xl font-serif mb-3 leading-none">"</div>
-              <p className="text-gray-700 text-[12.5px] leading-relaxed italic">
-                {L.quote}
+          {/* Right: testimonial */}
+          <div
+            className="rounded-2xl overflow-hidden relative flex flex-col justify-end p-6"
+            style={{ background: "linear-gradient(135deg,#001d3d 0%,#003a6e 100%)", minHeight: 380 }}
+          >
+            <div className="absolute top-0 left-0 right-0 bottom-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 30% 30%, white 1px, transparent 1px), radial-gradient(circle at 70% 70%, white 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+
+            {/* Big quote mark */}
+            <div className="absolute top-5 left-5 text-white/10 font-black" style={{ fontSize: 80, lineHeight: 1, fontFamily: "Georgia,serif" }}>"</div>
+
+            <div className="relative z-10">
+              <p className="text-white/85 text-[14px] leading-relaxed italic mb-6">
+                "{quote}"
               </p>
-            </div>
-            <div className="flex items-center gap-3 mt-5 pt-4 border-t border-gray-100">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1457A8] to-[#008C95] flex items-center justify-center text-white font-bold text-sm">
-                {L.student_name[0]}
-              </div>
-              <div>
-                <div className="text-[#172033] font-bold text-[13px]">{L.student_name}</div>
-                <div className="text-gray-500 text-[11px]">{L.student_role}</div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm flex-shrink-0" style={{ background: "#e8a820" }}>
+                  {author.charAt(0)}
+                </div>
+                <div>
+                  <div className="text-white font-bold text-[13px]">{author}</div>
+                  <div className="text-white/50 text-[11px]">{role}</div>
+                </div>
               </div>
             </div>
           </div>
