@@ -122,12 +122,12 @@ export default function Footer() {
                   <MapPin size={14} className="mt-0.5 flex-shrink-0 text-[#e8a820]" />
                   <span>
                     {locale === "ru"
-                      ? "г. Карши, ул. Кургон, 1"
+                      ? "Кашкадарьинская обл., г. Карши, ул. Кургон, 1"
                       : locale === "en"
-                      ? "Qarshi, Ko'rg'on Street, 1"
+                      ? "Kashkadarya region, Qarshi, Ko'rg'on Street, 1"
                       : locale === "tr"
-                      ? "Karshi, Kurgon Caddesi, 1"
-                      : "Qarshi shahri, Ko'rg'on ko'chasi, 1-uy"}
+                      ? "Kaşkaderyа vilayeti, Karshi, Kurgon Caddesi, 1"
+                      : "Qashqadaryo viloyati, Qarshi shahri, Ko'rg'on ko'chasi, 1-uy"}
                   </span>
                 </li>
                 <li className="flex items-center gap-2.5 text-white/50 text-[13px]">

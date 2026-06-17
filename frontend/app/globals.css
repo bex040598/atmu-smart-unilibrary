@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #00264d;
-  --deep-blue: #003d66;
-  --portal-blue: #00579f;
-  --royal-blue: #1457A8;
-  --gold: #e8a820;
-  --bg-light: #f4f6f9;
+  --navy: #002B4A;
+  --deep-blue: #003D66;
+  --portal-blue: #0069A8;
+  --accent-blue: #00A3E0;
+  --gold: #F5B400;
+  --bg-light: #F4F7FB;
   --card-white: #FFFFFF;
-  --text-dark: #1a2332;
-  --text-muted: #5a6a7e;
-  --background: #f4f6f9;
-  --foreground: #1a2332;
-  --section-dark: #002b4e;
+  --text-dark: #102033;
+  --text-muted: #64748B;
+  --background: #F4F7FB;
+  --foreground: #102033;
+  --section-dark: #003D66;
 }
 
 @theme inline {
@@ -250,7 +250,7 @@ body {
   border-radius: 2px;
 }
 .gradient-navy {
-  background: linear-gradient(135deg, #001d3d 0%, #003a6e 50%, #00579f 100%);
+  background: linear-gradient(135deg, #001d3d 0%, #003a6e 50%, #0069A8 100%);
 }
 .stat-counter {
   font-variant-numeric: tabular-nums;
