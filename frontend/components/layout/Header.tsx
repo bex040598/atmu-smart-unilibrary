@@ -109,6 +109,7 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQ, setSearchQ] = useState("");
   const [userOpen, setUserOpen] = useState(false);
+  const [openNav, setOpenNav] = useState<string | null>(null);
 
   const authenticated = isAuthenticated();
   const user = authenticated ? getUser() : null;
@@ -311,20 +312,40 @@ export default function Header() {
         <div className="max-w-[1680px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
           <div className="flex items-stretch h-full">
             {NAV_ITEMS.map(item => (
-              /* nav-item: position relative is set in CSS .nav-item */
-              <div key={item.key} className="nav-item flex items-stretch">
-                <button className="nav-link">
+              <div
+                key={item.key}
+                className="nav-item flex items-stretch"
+                onMouseEnter={() => item.children.length > 0 && setOpenNav(item.key)}
+                onMouseLeave={() => setOpenNav(null)}
+              >
+                <button
+                  className="nav-link"
+                  onClick={() => setOpenNav(openNav === item.key ? null : item.key)}
+                >
                   {t(item.label)}
                   {item.children.length > 0 && (
-                    <ChevronDown size={10} className="opacity-50 ml-0.5" />
+                    <ChevronDown
+                      size={10}
+                      className={`opacity-50 ml-0.5 transition-transform duration-200 ${openNav === item.key ? "rotate-180" : ""}`}
+                    />
                   )}
                 </button>
 
-                {/* DROPDOWN MENU — uses .dropdown-menu CSS class, not mega-menu */}
+                {/* JS-controlled dropdown — always mounted, visibility via style */}
                 {item.children.length > 0 && (
-                  <div className="dropdown-menu">
+                  <div
+                    className="dropdown-menu"
+                    style={{
+                      opacity: openNav === item.key ? 1 : 0,
+                      visibility: openNav === item.key ? "visible" : "hidden",
+                      transform: openNav === item.key ? "translateY(0)" : "translateY(-6px)",
+                      pointerEvents: openNav === item.key ? "auto" : "none",
+                    }}
+                    onMouseEnter={() => setOpenNav(item.key)}
+                    onMouseLeave={() => setOpenNav(null)}
+                  >
                     {item.children.map((child, i) => (
-                      <Link key={i} href={child.href}>
+                      <Link key={i} href={child.href} onClick={() => setOpenNav(null)}>
                         {t(child.label)}
                       </Link>
                     ))}

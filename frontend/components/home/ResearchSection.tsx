@@ -6,26 +6,21 @@ type Locale = "uz" | "ru" | "en" | "tr";
 const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz;
 
 function AnimNum({ target, dur = 1600 }: { target: number; dur?: number }) {
-  const [cur, setCur] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
+  const [cur, setCur] = useState(target);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        const s = Date.now();
-        const tick = () => {
-          const p = Math.min((Date.now() - s) / dur, 1);
-          setCur(Math.round((1 - Math.pow(1 - p, 3)) * target));
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-    }, { threshold: 0.3 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
+    setCur(0);
+    const timer = setTimeout(() => {
+      const s = Date.now();
+      const tick = () => {
+        const p = Math.min((Date.now() - s) / dur, 1);
+        setCur(Math.round((1 - Math.pow(1 - p, 3)) * target));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, 300);
+    return () => clearTimeout(timer);
   }, [target, dur]);
-  return <span ref={ref}>{cur.toLocaleString()}</span>;
+  return <span>{cur.toLocaleString()}</span>;
 }
 
 const STATS = [

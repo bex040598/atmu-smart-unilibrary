@@ -82,8 +82,20 @@ const SERVICES = [
 export default function InteractiveServices() {
   const locale = useLocale() as Locale;
   const titleLabel = locale === "uz" ? "Interaktiv xizmatlar" : locale === "ru" ? "Интерактивные сервисы" : locale === "tr" ? "İnteraktif Hizmetler" : "Interactive Services";
-  const panelTitle = locale === "uz" ? "Universitet interaktiv xizmatlaridan unumli foydalaning!" : locale === "ru" ? "Пользуйтесь интерактивными сервисами университета!" : locale === "tr" ? "Üniversitenin interaktif hizmetlerini etkin kullanın!" : "Make full use of the university interactive services!";
-  const panelSub = locale === "uz" ? "Barcha raqamli xizmatlar bir joyda — talabalar, o'qituvchilar va xodimlar uchun" : locale === "ru" ? "Все цифровые сервисы в одном месте — для студентов, преподавателей и сотрудников" : locale === "tr" ? "Tüm dijital hizmetler tek yerde — öğrenciler, öğretmenler ve personel için" : "All digital services in one place — for students, teachers and staff";
+  const panelTitle = locale === "uz"
+    ? "ATMU raqamli xizmatlari — talabalar, o'qituvchilar va xodimlar uchun"
+    : locale === "ru"
+    ? "Цифровые сервисы АТМУ — для студентов, преподавателей и сотрудников"
+    : locale === "tr"
+    ? "ATMU dijital hizmetleri — öğrenciler, öğretmenler ve personel için"
+    : "ATMU digital services — for students, faculty and staff";
+  const panelSub = locale === "uz"
+    ? "ATMU talabalari, professor-o'qituvchilari va xodimlari uchun dars jadvali, HEMIS, Moodle, elektron kutubxona, kitob band qilish va shaxsiy kabinet xizmatlari yagona portal orqali taqdim etiladi."
+    : locale === "ru"
+    ? "Расписание занятий, HEMIS, Moodle, электронная библиотека, бронирование книг и личный кабинет для студентов, преподавателей и сотрудников АТМУ доступны через единый портал."
+    : locale === "tr"
+    ? "ATMU öğrencileri, öğretim üyeleri ve personeli için ders programı, HEMIS, Moodle, e-kütüphane, kitap rezervasyonu ve kişisel kabine hizmetleri tek portal üzerinden sunulmaktadır."
+    : "Schedule, HEMIS, Moodle, e-library, book reservations and personal cabinet services for ATMU students, faculty and staff are provided through a single portal.";
 
   return (
     <section className="section-dark py-16 relative overflow-hidden">
