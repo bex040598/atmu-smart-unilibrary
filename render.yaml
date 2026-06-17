@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: atmu-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: atmu-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: CORS_ORIGINS
+        value: https://atmu-frontend.onrender.com
+
+  - type: web
+    name: atmu-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://atmu-backend.onrender.com
+
+databases:
+  - name: atmu-db
+    databaseName: atmu_library
+    user: atmu_user
+    plan: free
