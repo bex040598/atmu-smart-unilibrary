@@ -11,6 +11,9 @@ build/
 venv/
 env/
 *.env
+.env
+backend/.env
+frontend/.env.local
 
 # Node
 node_modules/
