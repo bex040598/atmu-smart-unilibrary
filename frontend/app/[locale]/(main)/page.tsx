@@ -1,25 +1,29 @@
 import HeroSection from "@/components/home/HeroSection";
-import StatsSection from "@/components/home/StatsSection";
-import AnnouncementsSection from "@/components/home/AnnouncementsSection";
-import DepartmentsHub from "@/components/home/DepartmentsHub";
-import QuickActions from "@/components/home/QuickActions";
-import NewResources from "@/components/home/NewResources";
-import AIPreview from "@/components/home/AIPreview";
-import ReadingRoomPreview from "@/components/home/ReadingRoomPreview";
+import UniversityAbout from "@/components/home/UniversityAbout";
+import UniversityNews from "@/components/home/UniversityNews";
+import UniversityEvents from "@/components/home/UniversityEvents";
+import InteractiveServices from "@/components/home/InteractiveServices";
+import FacultyDepartments from "@/components/home/FacultyDepartments";
+import StudentLife from "@/components/home/StudentLife";
+import ResearchSection from "@/components/home/ResearchSection";
+import ScientificCenters from "@/components/home/ScientificCenters";
+import AlumniSection from "@/components/home/AlumniSection";
+import SmartLibrarySection from "@/components/home/SmartLibrarySection";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
       <HeroSection />
-      <StatsSection />
-      <QuickActions />
-      <AnnouncementsSection />
-      <DepartmentsHub />
-      <NewResources />
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <AIPreview />
-        <ReadingRoomPreview />
-      </div>
+      <UniversityAbout />
+      <UniversityNews />
+      <UniversityEvents />
+      <InteractiveServices />
+      <FacultyDepartments />
+      <StudentLife />
+      <ResearchSection />
+      <ScientificCenters />
+      <AlumniSection />
+      <SmartLibrarySection />
     </div>
   );
 }

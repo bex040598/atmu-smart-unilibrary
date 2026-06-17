@@ -1,74 +1,87 @@
 "use client";
 
+import { useState } from "react";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { Search, BookOpen, GraduationCap, ArrowRight, ChevronRight } from "lucide-react";
-import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
+import { Search, BookOpen, GraduationCap, ArrowRight, Building2, Library } from "lucide-react";
 
-const L: Record<string, Record<string, string>> = {
+type Locale = "uz" | "ru" | "en" | "tr";
+
+const T: Record<Locale, Record<string, string>> = {
   uz: {
-    tag: "Rasmiy elektron kutubxona portali",
-    title1: "ATMU Smart",
-    title2: "Elektron Kutubxona",
-    subtitle: "Barcha resurslar, kitoblar va o'quv materiallar bir joyda. O'qing, tadqiq qiling, rivojlaning.",
-    search_placeholder: "Kitob, maqola yoki resurs nomini kiriting...",
-    search_btn: "Qidirish",
-    catalog: "Katalogga o'tish",
-    ai: "AI Yordamchi",
-    books: "Kitob",
-    resources: "Resurs",
-    seats: "O'rindiq",
-    departments: "Kafedra",
+    badge: "Rasmiy Universitet Portali",
+    title: "Axborot texnologiyalari va menejment universiteti",
+    subtitle: "Raqamli ta'lim, ilmiy tadqiqotlar va elektron kutubxona xizmatlarini yagona akademik muhitda birlashtirgan zamonaviy davlat universiteti.",
+    search_ph: "Resurs, kitob, maqola yoki kafedra nomini kiriting...",
+    btn_about: "Universitet haqida",
+    btn_lib: "Elektron kutubxona",
+    btn_depts: "Kafedralar",
+    btn_ai: "AI kutubxonachi",
+    stat1: "Talabalar",
+    stat2: "O'qituvchilar",
+    stat3: "E-Resurslar",
+    stat4: "Kafedralar",
+    home: "Bosh sahifa",
   },
   ru: {
-    tag: "Официальный электронный библиотечный портал",
-    title1: "АТМУ Smart",
-    title2: "Электронная Библиотека",
-    subtitle: "Все ресурсы, книги и учебные материалы в одном месте. Читайте, исследуйте, развивайтесь.",
-    search_placeholder: "Введите название книги, статьи или ресурса...",
-    search_btn: "Поиск",
-    catalog: "Перейти в каталог",
-    ai: "ИИ Ассистент",
-    books: "Книг",
-    resources: "Ресурсов",
-    seats: "Мест",
-    departments: "Кафедр",
+    badge: "Официальный портал университета",
+    title: "Университет информационных технологий и менеджмента",
+    subtitle: "Современный государственный университет, объединяющий цифровое образование, научные исследования и услуги электронной библиотеки в единой академической среде.",
+    search_ph: "Введите ресурс, книгу, статью или название кафедры...",
+    btn_about: "Об университете",
+    btn_lib: "Электронная библиотека",
+    btn_depts: "Кафедры",
+    btn_ai: "AI библиотекарь",
+    stat1: "Студентов",
+    stat2: "Преподавателей",
+    stat3: "Э-ресурсов",
+    stat4: "Кафедр",
+    home: "Главная",
   },
   en: {
-    tag: "Official Electronic Library Portal",
-    title1: "ATMU Smart",
-    title2: "E-Library",
-    subtitle: "All resources, books and study materials in one place. Read, research, and grow.",
-    search_placeholder: "Enter book, article or resource title...",
-    search_btn: "Search",
-    catalog: "Go to catalog",
-    ai: "AI Assistant",
-    books: "Books",
-    resources: "Resources",
-    seats: "Seats",
-    departments: "Departments",
+    badge: "Official University Portal",
+    title: "University of Information Technologies and Management",
+    subtitle: "A modern state university that integrates digital education, scientific research, and electronic library services in a single academic environment.",
+    search_ph: "Enter resource, book, article or department name...",
+    btn_about: "About University",
+    btn_lib: "E-Library",
+    btn_depts: "Departments",
+    btn_ai: "AI Librarian",
+    stat1: "Students",
+    stat2: "Faculty",
+    stat3: "E-Resources",
+    stat4: "Departments",
+    home: "Home",
   },
   tr: {
-    tag: "Resmi Elektronik Kütüphane Portalı",
-    title1: "ATMU Smart",
-    title2: "E-Kütüphane",
-    subtitle: "Tüm kaynaklar, kitaplar ve çalışma materyalleri tek bir yerde. Okuyun, araştırın, gelişin.",
-    search_placeholder: "Kitap, makale veya kaynak adı girin...",
-    search_btn: "Ara",
-    catalog: "Kataloğa git",
-    ai: "AI Asistan",
-    books: "Kitap",
-    resources: "Kaynak",
-    seats: "Koltuk",
-    departments: "Bölüm",
+    badge: "Üniversitenin Resmi Portalı",
+    title: "Bilgi Teknolojileri ve Yönetim Üniversitesi",
+    subtitle: "Dijital eğitimi, bilimsel araştırmaları ve elektronik kütüphane hizmetlerini tek bir akademik ortamda birleştiren modern bir devlet üniversitesi.",
+    search_ph: "Kaynak, kitap, makale veya bölüm adı girin...",
+    btn_about: "Üniversite Hakkında",
+    btn_lib: "E-Kütüphane",
+    btn_depts: "Bölümler",
+    btn_ai: "AI Kütüphaneci",
+    stat1: "Öğrenci",
+    stat2: "Öğretim Üyesi",
+    stat3: "E-Kaynak",
+    stat4: "Bölüm",
+    home: "Ana Sayfa",
   },
 };
 
+const STATS = [
+  { key: "stat1", value: "2 318" },
+  { key: "stat2", value: "126" },
+  { key: "stat3", value: "1 247" },
+  { key: "stat4", value: "6" },
+];
+
 export default function HeroSection() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const router = useRouter();
-  const t = L[locale] || L.uz;
+  const L = T[locale] || T.uz;
   const [query, setQuery] = useState("");
 
   const handleSearch = (e: React.FormEvent) => {
@@ -79,96 +92,116 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="hero-banner min-h-[480px] flex flex-col justify-center py-16 lg:py-20">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 w-full">
-        <div className="max-w-3xl">
-          {/* Tag */}
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-yellow-300 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-yellow-300 animate-pulse-slow" />
-            {t.tag}
-          </div>
+    <section
+      className="relative overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, #030C18 0%, #061B3A 30%, #0B3D73 65%, #1058A0 100%)",
+        minHeight: "580px",
+      }}
+    >
+      {/* Background pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M30 5L55 20V40L30 55L5 40V20Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: "80px 80px",
+        }}
+      />
+      {/* Gold accent radials */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-10" style={{ background: "radial-gradient(circle, #D6A84F 0%, transparent 70%)", transform: "translate(30%,-30%)" }} />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8" style={{ background: "radial-gradient(circle, #1457A8 0%, transparent 70%)", transform: "translate(-30%,30%)" }} />
+      </div>
 
-          {/* Title */}
-          <h1 className="text-white font-bold leading-tight mb-5">
-            <span className="block text-3xl lg:text-5xl xl:text-6xl">{t.title1}</span>
-            <span className="block text-3xl lg:text-5xl xl:text-6xl text-gradient-gold">{t.title2}</span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-white/70 text-base lg:text-lg mb-8 leading-relaxed max-w-xl">
-            {t.subtitle}
-          </p>
-
-          {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex gap-0 mb-8 max-w-2xl">
-            <div className="flex-1 flex items-center bg-white rounded-l-xl shadow-2xl overflow-hidden">
-              <Search size={18} className="ml-4 text-gray-400 flex-shrink-0" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t.search_placeholder}
-                className="flex-1 px-3 py-4 text-gray-800 bg-transparent outline-none text-sm"
-              />
+      <div className="relative z-10 max-w-[1280px] mx-auto px-4 flex flex-col justify-center" style={{ minHeight: "580px" }}>
+        <div className="py-16 lg:py-20">
+          <div className="max-w-3xl">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 border border-yellow-400/30 text-yellow-300/90 text-[11px] font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-7"
+              style={{ background: "rgba(214,168,79,0.08)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse-slow" />
+              {L.badge}
             </div>
-            <button
-              type="submit"
-              className="bg-yellow-400 hover:bg-yellow-300 text-[#061B3A] font-bold px-6 py-4 rounded-r-xl transition-colors text-sm flex-shrink-0"
-            >
-              {t.search_btn}
-            </button>
-          </form>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href="/catalog"
-              className="flex items-center gap-2 bg-white text-[#061B3A] font-bold px-6 py-3 rounded-xl hover:bg-yellow-50 transition-colors text-sm shadow-lg"
-            >
-              <BookOpen size={16} />
-              {t.catalog}
-              <ArrowRight size={14} />
-            </Link>
-            <Link
-              href="/ai"
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/25 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm backdrop-blur-sm"
-            >
-              <GraduationCap size={16} />
-              {t.ai}
-            </Link>
+            {/* Title */}
+            <h1 className="font-bold leading-[1.1] mb-6 text-white">
+              <span className="block text-[28px] lg:text-[42px] xl:text-[48px]">
+                {L.title}
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-white/65 text-[15px] lg:text-[17px] mb-8 leading-relaxed max-w-2xl font-light">
+              {L.subtitle}
+            </p>
+
+            {/* Search */}
+            <form onSubmit={handleSearch} className="flex max-w-2xl mb-9">
+              <div className="flex-1 flex items-center bg-white rounded-l-xl shadow-2xl overflow-hidden">
+                <Search size={16} className="ml-4 text-gray-400 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={L.search_ph}
+                  className="flex-1 px-3 py-4 text-gray-800 bg-transparent outline-none text-[13px]"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-yellow-400 hover:bg-yellow-300 text-[#061B3A] font-bold px-7 py-4 rounded-r-xl transition-colors text-[13px] flex-shrink-0"
+              >
+                {locale === "uz" ? "Qidirish" : locale === "ru" ? "Поиск" : locale === "tr" ? "Ara" : "Search"}
+              </button>
+            </form>
+
+            {/* CTA buttons */}
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href="/about"
+                className="flex items-center gap-2 bg-white text-[#061B3A] font-bold px-5 py-3 rounded-xl hover:bg-yellow-50 transition-colors text-[13px] shadow-lg"
+              >
+                <Building2 size={15} />
+                {L.btn_about}
+                <ArrowRight size={13} />
+              </Link>
+              <Link
+                href="/catalog"
+                className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 text-[#061B3A] font-bold px-5 py-3 rounded-xl transition-colors text-[13px]"
+              >
+                <Library size={15} />
+                {L.btn_lib}
+              </Link>
+              <Link
+                href="/departments"
+                className="flex items-center gap-2 border border-white/25 text-white/80 hover:text-white hover:bg-white/10 font-medium px-5 py-3 rounded-xl transition-colors text-[13px]"
+              >
+                <BookOpen size={15} />
+                {L.btn_depts}
+              </Link>
+              <Link
+                href="/ai"
+                className="flex items-center gap-2 border border-white/15 text-white/60 hover:text-white hover:bg-white/10 font-medium px-5 py-3 rounded-xl transition-colors text-[13px]"
+              >
+                <GraduationCap size={15} />
+                {L.btn_ai}
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Right floating card — desktop only */}
-        <div className="hidden xl:block absolute right-4 top-1/2 -translate-y-1/2 w-64">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 space-y-3">
-            {[
-              { label: t.books, value: "50,000+", color: "bg-blue-400" },
-              { label: t.resources, value: "12,000+", color: "bg-teal-400" },
-              { label: t.seats, value: "200", color: "bg-yellow-400" },
-              { label: t.departments, value: "6", color: "bg-purple-400" },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center gap-3">
-                <div className={`w-2 h-8 rounded-full ${item.color} flex-shrink-0`} />
+        {/* Stats bar — pinned to bottom */}
+        <div className="border-t border-white/10 py-5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {STATS.map((s) => (
+              <div key={s.key} className="flex items-center gap-3">
+                <div className="w-0.5 h-10 rounded-full bg-yellow-400/50" />
                 <div>
-                  <div className="text-white font-bold text-lg leading-none">{item.value}</div>
-                  <div className="text-white/60 text-xs">{item.label}</div>
+                  <div className="text-white font-bold text-xl stat-counter">{s.value}<span className="text-yellow-300">+</span></div>
+                  <div className="text-white/45 text-[11px] mt-0.5">{L[s.key]}</div>
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom breadcrumb hint */}
-      <div className="relative z-10 mt-8 border-t border-white/10 py-3">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center gap-1.5 text-white/40 text-xs">
-            <Link href="/" className="hover:text-white/60">ATMU</Link>
-            <ChevronRight size={10} />
-            <span className="text-white/60">
-              {locale === "uz" ? "Bosh sahifa" : locale === "ru" ? "Главная" : locale === "tr" ? "Ana Sayfa" : "Home"}
-            </span>
           </div>
         </div>
       </div>
