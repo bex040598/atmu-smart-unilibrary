@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_URL:
       process.env.NEXT_PUBLIC_API_URL ||
-      "https://atmu-smart-unilibrary-1.onrender.com",
+      "https://atmu-smart-unilibrary-5.onrender.com",
   },
   images: {
     remotePatterns: [
