@@ -149,6 +149,7 @@ export const aiApi = {
 
 export const reportsApi = {
   library: () => api.get("/reports/library"),
+  publicStats: () => api.get("/reports/public-stats"),
   users: () => api.get("/reports/users"),
 };
 

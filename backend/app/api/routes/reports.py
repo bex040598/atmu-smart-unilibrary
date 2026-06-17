@@ -14,6 +14,33 @@ from app.models.reading_room import SeatReservation
 router = APIRouter(prefix="/reports", tags=["reports"])
 
 
+@router.get("/public-stats")
+def public_stats(session: Session = Depends(get_session)):
+    """Public statistics — no auth required."""
+    from app.models.department import Department
+    from app.models.reading_room import Seat
+    total_resources = session.exec(
+        select(func.count(DepartmentResource.id)).where(
+            DepartmentResource.status == ResourceStatus.approved
+        )
+    ).one()
+    total_books = session.exec(select(func.count(Book.id))).one()
+    active_loans = session.exec(
+        select(func.count(Loan.id)).where(Loan.status == LoanStatus.active)
+    ).one()
+    total_departments = session.exec(select(func.count(Department.id))).one()
+    total_seats = session.exec(select(func.count(Seat.id))).one()
+    return {
+        "total_resources": total_resources,
+        "total_books": total_books,
+        "active_loans": active_loans,
+        "total_departments": total_departments,
+        "available_seats": total_seats,
+        "ai_queries_today": 0,
+        "uploaded_today": 0,
+    }
+
+
 def require_admin(current_user: User = Depends(get_current_user)):
     if current_user.role not in [UserRoleEnum.admin, UserRoleEnum.librarian]:
         from fastapi import HTTPException

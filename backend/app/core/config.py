@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     UPLOAD_DIR: str = "uploads"
     MAX_FILE_SIZE: int = 52428800
-    CORS_ORIGINS: str = '["http://localhost:3000"]'
+    CORS_ORIGINS: str = '["http://localhost:3000","http://localhost:3001","https://atmu-smart-unilibrary-2.onrender.com","https://atmu-smart-unilibrary.onrender.com"]'
 
     @property
     def cors_origins_list(self) -> List[str]:
