@@ -9,7 +9,7 @@ from app.models.subject import Subject
 from app.models.book import Book, BookCopy
 from app.models.resource import DepartmentResource, ResourceStatus, MaterialType
 from app.models.reading_room import ReadingRoom, Seat
-from app.models.announcement import Announcement
+from app.models.notification import Announcement
 from datetime import datetime
 
 
