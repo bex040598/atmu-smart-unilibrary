@@ -45,12 +45,14 @@ app.include_router(audit.router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
-    # Auto seed if needed
     try:
         from app.utils.seed import seed
         seed()
+        print("✅ Seed completed")
     except Exception as e:
-        print(f"Seed warning: {e}")
+        import traceback
+        print(f"❌ Seed error: {e}")
+        traceback.print_exc()
 
 
 @app.get("/")

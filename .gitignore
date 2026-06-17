@@ -34,3 +34,8 @@ desktop.ini
 
 # Uploads
 backend/uploads/
+
+# SQLite database (never commit)
+*.db
+*.sqlite
+*.sqlite3
