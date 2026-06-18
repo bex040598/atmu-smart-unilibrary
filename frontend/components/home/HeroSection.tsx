@@ -16,38 +16,38 @@ const SLIDES = [
       tr: "Bilgi Teknolojileri ve Yönetim Üniversitesi",
     },
     subtitle: {
-      uz: "Raqamli ta'lim, ilmiy faoliyat va elektron kutubxona xizmatlarini yagona universitet portalida birlashtirgan zamonaviy akademik muhit.",
-      ru: "Современная академическая среда, объединяющая цифровое образование, научную деятельность и услуги электронной библиотеки на едином университетском портале.",
-      en: "A modern academic environment uniting digital education, research activities and e-library services in a single university portal.",
-      tr: "Dijital eğitim, bilimsel faaliyet ve e-kütüphane hizmetlerini tek bir üniversite portalında birleştiren modern akademik ortam.",
+      uz: "Raqamli ta'lim, ilmiy faoliyat, interaktiv xizmatlar va elektron kutubxona imkoniyatlarini yagona universitet portalida birlashtirgan zamonaviy akademik muhit.",
+      ru: "Современная академическая среда, объединяющая цифровое образование, науку, интерактивные сервисы и электронную библиотеку на едином портале.",
+      en: "A modern academic environment uniting digital education, research, interactive services and e-library in a single university portal.",
+      tr: "Dijital eğitim, bilim, interaktif hizmetler ve e-kütüphaneyi tek portalda birleştiren modern akademik ortam.",
     },
   },
   {
     title: {
-      uz: "Raqamli ta'lim va ilmiy faoliyat markazi",
-      ru: "Центр цифрового образования и научной деятельности",
-      en: "Center of Digital Education and Research",
-      tr: "Dijital Eğitim ve Araştırma Merkezi",
+      uz: "Ilm-fan va tadqiqot — ATMUning ustuvor yo'nalishi",
+      ru: "Наука и исследования — приоритет АТМУ",
+      en: "Science and Research — ATMU's Priority Direction",
+      tr: "Bilim ve Araştırma — ATMU'nun Öncelikli Yönü",
     },
     subtitle: {
-      uz: "ATMUda o'quv jarayoni, ilmiy tadqiqotlar va kafedralar resurslari zamonaviy raqamli platformalar orqali boshqariladi.",
-      ru: "В АТМУ учебный процесс, научные исследования и ресурсы кафедр управляются через современные цифровые платформы.",
-      en: "At ATMU, the academic process, research and department resources are managed through modern digital platforms.",
-      tr: "ATMU'da öğretim süreci, araştırmalar ve bölüm kaynakları modern dijital platformlar aracılığıyla yönetilir.",
+      uz: "Universitet xalqaro miqyosdagi ilmiy konferentsiyalar, dissertatsiya tadqiqotlari va sanoat hamkorliklari orqali zamonaviy ilm-fan rivojiga hissa qo'shmoqda.",
+      ru: "Университет вносит вклад в развитие современной науки через международные конференции, диссертационные исследования и партнёрства с промышленностью.",
+      en: "The university contributes to modern science through international conferences, dissertation research and industrial partnerships.",
+      tr: "Üniversite, uluslararası konferanslar, tez araştırmaları ve sanayi ortaklıkları aracılığıyla bilime katkı sağlamaktadır.",
     },
   },
   {
     title: {
-      uz: "E-Lib — ATMU Smart UniLibrary",
-      ru: "E-Lib — ATMU Smart UniLibrary",
-      en: "E-Lib — ATMU Smart UniLibrary",
-      tr: "E-Lib — ATMU Smart UniLibrary",
+      uz: "2026-yil qabul — kelajagingizni ATMU bilan quring",
+      ru: "Приём 2026 — стройте будущее с АТМУ",
+      en: "Admissions 2026 — Build Your Future with ATMU",
+      tr: "Kabul 2026 — Geleceğinizi ATMU ile İnşa Edin",
     },
     subtitle: {
-      uz: "Platforma ATMU kafedralarida yaratilgan o'quv-uslubiy materiallar, elektron darsliklar, laboratoriya ishlari va kutubxona fondidagi bosma kitoblar bilan ishlashni yagona raqamli muhitda boshqaradi.",
-      ru: "Платформа управляет учебно-методическими материалами, электронными учебниками, лабораторными работами и библиотечным фондом в едином цифровом пространстве.",
-      en: "The platform manages educational materials, e-textbooks, lab works and library collections created in ATMU departments in a unified digital environment.",
-      tr: "Platform, ATMU bölümlerinde oluşturulan eğitim materyallerini, e-ders kitaplarını, laboratuvar çalışmalarını ve kütüphane koleksiyonlarını tek dijital ortamda yönetir.",
+      uz: "Bakalavr va magistratura dasturlarida o'qish uchun hujjatlar qabul qilish boshlandi. Raqamli texnologiyalar, menejment va pedagogika yo'nalishlari bo'yicha davlat granti o'rinlari mavjud.",
+      ru: "Начат приём документов на бакалавриат и магистратуру. Имеются места на государственный грант по направлениям цифровых технологий, менеджмента и педагогики.",
+      en: "Applications for bachelor's and master's programs are now open. State grant places available in digital technologies, management and pedagogy.",
+      tr: "Lisans ve yüksek lisans programları için başvurular başladı. Dijital teknolojiler, yönetim ve pedagoji alanlarında devlet bursları mevcuttur.",
     },
   },
 ];
@@ -62,9 +62,9 @@ const STATS = [
 
 const CTA = [
   { href: "/", label: { uz: "Universitet haqida", ru: "Об университете", en: "About University", tr: "Üniversite" }, style: "gold" },
-  { href: "/catalog", label: { uz: "Elektron kutubxona", ru: "Эл. библиотека", en: "E-Library", tr: "E-Kütüphane" }, style: "blue" },
-  { href: "/departments", label: { uz: "Kafedralar", ru: "Кафедры", en: "Departments", tr: "Bölümler" }, style: "ghost" },
-  { href: "/", label: { uz: "Qabul komissiyasi", ru: "Приёмная комиссия", en: "Admission", tr: "Kabul Komisyonu" }, style: "ghost" },
+  { href: "/", label: { uz: "Qabul jarayoni", ru: "Приёмная комиссия", en: "Admission", tr: "Kabul" }, style: "blue" },
+  { href: "/departments", label: { uz: "Fakultet va kafedralar", ru: "Факультеты", en: "Faculties", tr: "Fakülteler" }, style: "ghost" },
+  { href: "/catalog", label: { uz: "E-Kutubxona", ru: "Э-Библиотека", en: "E-Library", tr: "E-Kütüphane" }, style: "ghost" },
 ];
 
 export default function HeroSection() {

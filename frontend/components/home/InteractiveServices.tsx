@@ -39,7 +39,7 @@ const SERVICES = [
     icon: <BookOpen className="w-7 h-7" />,
     color: "#00579f",
     bg: "#dce8f5",
-    label: { uz: "Smart UniLibrary", ru: "Smart UniLibrary", en: "Smart UniLibrary", tr: "Smart UniLibrary" },
+    label: { uz: "E-Kutubxona", ru: "Э-Библиотека", en: "E-Library", tr: "E-Kütüphane" },
     href: "/catalog",
   },
   {

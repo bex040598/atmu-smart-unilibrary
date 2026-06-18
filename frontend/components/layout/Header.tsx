@@ -144,7 +144,7 @@ export default function Header() {
             </div>
             <div className="hidden sm:block">
               <div className="text-white font-black text-[13px] leading-tight tracking-wide uppercase">ATMU</div>
-              <div className="text-white/55 text-[9px] font-semibold uppercase tracking-widest leading-tight">Smart UniLibrary</div>
+              <div className="text-white/55 text-[9px] font-semibold uppercase tracking-widest leading-tight">Rasmiy portal</div>
             </div>
           </Link>
 

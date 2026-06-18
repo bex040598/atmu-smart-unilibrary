@@ -7,7 +7,7 @@ const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz
 const CARDS = [
   { bg: "#003a6e", title: { uz: "Ilmiy tadqiqotlar", ru: "Научные исследования", en: "Research", tr: "Araştırma" }, desc: { uz: "Talabalar ilmiy markazlar va laboratoriyalarda amaliy tajriba oladi", ru: "Студенты получают практический опыт в научных центрах и лабораториях", en: "Students gain hands-on experience in research centers and labs", tr: "Öğrenciler araştırma merkezlerinde pratik deneyim kazanır" } },
   { bg: "#0d3d2a", title: { uz: "Sport va madaniyat", ru: "Спорт и культура", en: "Sport & Culture", tr: "Spor & Kültür" }, desc: { uz: "Sport musobaqalari, madaniy tadbirlar va talabalar hayoti", ru: "Спортивные соревнования, культурные мероприятия и студенческая жизнь", en: "Sports competitions, cultural events and student life", tr: "Spor yarışmaları, kültürel etkinlikler ve öğrenci hayatı" } },
-  { bg: "#002b4e", title: { uz: "Smart UniLibrary", ru: "Smart UniLibrary", en: "Smart UniLibrary", tr: "Smart UniLibrary" }, desc: { uz: "Elektron katalog, AI qidiruv va o'quv zali bron qilish xizmatlari", ru: "Электронный каталог, ИИ-поиск и бронирование мест в читальном зале", en: "E-catalog, AI search and reading room seat booking services", tr: "E-katalog, AI arama ve okuma salonu rezervasyonu hizmetleri" } },
+  { bg: "#002b4e", title: { uz: "E-Kutubxona", ru: "Э-Библиотека", en: "E-Library", tr: "E-Kütüphane" }, desc: { uz: "Elektron katalog, AI qidiruv va o'quv zali bron qilish xizmatlari", ru: "Электронный каталог, ИИ-поиск и бронирование мест в читальном зале", en: "E-catalog, AI search and reading room seat booking services", tr: "E-katalog, AI arama ve okuma salonu rezervasyonu hizmetleri" } },
 ];
 
 export default function StudentLife() {

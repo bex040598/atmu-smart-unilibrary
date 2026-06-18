@@ -8,33 +8,33 @@ const t = (obj: Record<string, string>, locale: Locale) => obj[locale] || obj.uz
 
 const NEWS = [
   {
-    id: 1, cat: { uz: "Yangilik", ru: "Новость", en: "News", tr: "Haber" }, catColor: "#0069A8",
-    date: { uz: "15 Iyun 2026", ru: "15 Июня 2026", en: "June 15, 2026", tr: "15 Haziran 2026" },
-    title: { uz: "ATMUda yangi o'quv yili uchun raqamli xizmatlar yangilandi", ru: "В АТМУ обновлены цифровые сервисы для нового учебного года", en: "ATMU digital services updated for the new academic year", tr: "ATMU'da yeni akademik yıl için dijital hizmetler güncellendi" },
+    id: 1, cat: { uz: "Xalqaro", ru: "Международное", en: "International", tr: "Uluslararası" }, catColor: "#0069A8",
+    date: { uz: "16 Iyun 2026", ru: "16 Июня 2026", en: "June 16, 2026", tr: "16 Haziran 2026" },
+    title: { uz: "ATMU xalqaro reyting tizimida O'zbekiston universitetlari o'rtasida top-10 ga kirdi", ru: "АТМУ вошёл в топ-10 вузов Узбекистана в международном рейтинге", en: "ATMU ranked top-10 among Uzbekistan universities in international ratings", tr: "ATMU, uluslararası sıralamada Özbekistan üniversiteleri arasında ilk 10'a girdi" },
     bg: "#002B4A", featured: true,
   },
   {
-    id: 2, cat: { uz: "E-Lib", ru: "E-Lib", en: "E-Lib", tr: "E-Kütüphane" }, catColor: "#F5B400",
-    date: { uz: "10 Iyun 2026", ru: "10 Июня 2026", en: "June 10, 2026", tr: "10 Haziran 2026" },
-    title: { uz: "Smart UniLibrary elektron kutubxona bo'limi test rejimida ishga tushirildi", ru: "Раздел электронной библиотеки Smart UniLibrary запущен в тестовом режиме", en: "Smart UniLibrary e-library section launched in testing mode", tr: "Smart UniLibrary e-kütüphane bölümü test modunda başlatıldı" },
+    id: 2, cat: { uz: "Qabul", ru: "Приём", en: "Admission", tr: "Kabul" }, catColor: "#F5B400",
+    date: { uz: "12 Iyun 2026", ru: "12 Июня 2026", en: "June 12, 2026", tr: "12 Haziran 2026" },
+    title: { uz: "2026-2027 o'quv yiliga qabul komissiyasi ishi boshlandi: 680 ta grant o'rni", ru: "Открыта приёмная комиссия на 2026-2027 учебный год: 680 грантовых мест", en: "Admission for 2026-2027 academic year opened: 680 grant places available", tr: "2026-2027 akademik yılı için kayıt başladı: 680 burslu yer" },
     bg: "#003D66", featured: false,
   },
   {
-    id: 3, cat: { uz: "Ta'lim", ru: "Образование", en: "Education", tr: "Eğitim" }, catColor: "#00A3E0",
-    date: { uz: "5 Iyun 2026", ru: "5 Июня 2026", en: "June 5, 2026", tr: "5 Haziran 2026" },
-    title: { uz: "Kafedralar o'quv-uslubiy resurslarini raqamlashtirish ishlari boshlandi", ru: "Начата оцифровка учебно-методических ресурсов кафедр", en: "Digitization of department educational resources has begun", tr: "Bölümlerin eğitim materyallerinin dijitalleştirilmesi başladı" },
+    id: 3, cat: { uz: "Ilm-fan", ru: "Наука", en: "Science", tr: "Bilim" }, catColor: "#00A3E0",
+    date: { uz: "8 Iyun 2026", ru: "8 Июня 2026", en: "June 8, 2026", tr: "8 Haziran 2026" },
+    title: { uz: "ATMU olimlari Xalqaro sun'iy intellekt konferentsiyasida 3 ta ilmiy maqola taqdim etdi", ru: "Учёные АТМУ представили 3 научные статьи на Международной конференции по ИИ", en: "ATMU scientists presented 3 research papers at International AI Conference", tr: "ATMU bilim insanları Uluslararası YZ Konferansı'nda 3 makale sundu" },
     bg: "#004A6E", featured: false,
   },
   {
-    id: 4, cat: { uz: "Seminar", ru: "Семинар", en: "Seminar", tr: "Seminer" }, catColor: "#00A050",
-    date: { uz: "1 Iyun 2026", ru: "1 Июня 2026", en: "June 1, 2026", tr: "1 Haziran 2026" },
-    title: { uz: "Talabalar uchun elektron katalogdan foydalanish bo'yicha seminar tashkil etildi", ru: "Для студентов организован семинар по использованию электронного каталога", en: "A seminar on using the e-catalog was organized for students", tr: "Öğrenciler için e-katalog kullanımı semineri düzenlendi" },
+    id: 4, cat: { uz: "Ta'lim", ru: "Образование", en: "Education", tr: "Eğitim" }, catColor: "#00A050",
+    date: { uz: "3 Iyun 2026", ru: "3 Июня 2026", en: "June 3, 2026", tr: "3 Haziran 2026" },
+    title: { uz: "Yangi o'quv yilidan «Kiberxavfsizlik» bakalavr yo'nalishi ochiladi", ru: "С нового учебного года открывается направление «Кибербезопасность»", en: "New bachelor's program in Cybersecurity opens from next academic year", tr: "Yeni akademik yıldan itibaren Siber Güvenlik lisans programı açılıyor" },
     bg: "#1A3A5E", featured: false,
   },
   {
-    id: 5, cat: { uz: "Xodim", ru: "Персонал", en: "Staff", tr: "Personel" }, catColor: "#8855CC",
-    date: { uz: "26 May 2026", ru: "26 Мая 2026", en: "May 26, 2026", tr: "26 Mayıs 2026" },
-    title: { uz: "O'qituvchilar uchun resurs yuklash va tasdiqlash moduli sinovdan o'tkazilmoqda", ru: "Для преподавателей тестируется модуль загрузки и утверждения ресурсов", en: "Module for uploading and approving resources is being tested for teachers", tr: "Öğretmenler için kaynak yükleme ve onaylama modülü test edilmektedir" },
+    id: 5, cat: { uz: "Sport", ru: "Спорт", en: "Sports", tr: "Spor" }, catColor: "#8855CC",
+    date: { uz: "28 May 2026", ru: "28 Мая 2026", en: "May 28, 2026", tr: "28 Mayıs 2026" },
+    title: { uz: "ATMU talabasi respublika olimpiadasida oltin medal qo'lga kiritdi", ru: "Студент АТМУ завоевал золотую медаль на республиканской олимпиаде", en: "ATMU student wins gold medal at the national academic olympiad", tr: "ATMU öğrencisi ulusal olimpiyatta altın madalya kazandı" },
     bg: "#1A2A4A", featured: false,
   },
 ];
