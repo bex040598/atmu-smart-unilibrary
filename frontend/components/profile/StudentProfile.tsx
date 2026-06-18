@@ -1,246 +1,383 @@
 "use client";
 import { useState } from "react";
-import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
-  User, BookOpen, CalendarCheck, BookMarked, Bell,
-  Brain, ChevronRight, Clock, CheckCircle, AlertCircle,
-  GraduationCap, Star
+  BookOpen, Calendar, Clock, AlertTriangle, Brain,
+  BookMarked, TrendingUp, Bot, CheckCircle, Bell, QrCode,
+  GraduationCap, Mail, Phone, Download, ExternalLink, User,
+  Fingerprint, Star, AlertCircle
 } from "lucide-react";
-
-type Locale = "uz" | "ru" | "en" | "tr";
-
-const MOCK_STUDENT = {
-  name: "Abdullayev Jasur Mirzo o'g'li",
-  student_id: "ATM-2024-1042",
-  faculty: { uz: "Raqamli texnologiyalar fakulteti", ru: "Факультет цифровых технологий", en: "Digital Technologies Faculty", tr: "Dijital Teknolojiler Fakültesi" },
-  department: { uz: "Axborot texnologiyalari kafedrasi", ru: "Кафедра информационных технологий", en: "IT Department", tr: "BT Bölümü" },
-  direction: { uz: "Dasturiy injiniring", ru: "Программная инженерия", en: "Software Engineering", tr: "Yazılım Mühendisliği" },
-  course: 2,
-  group: "DT-22-01",
-  gpa: "3.8",
-};
-
-const ACTIVE_LOANS = [
-  { title: "Algoritm va ma'lumotlar tuzilmasi", author: "T. Cormen", due: "25 Iyun 2026", status: "ok" },
-  { title: "Python dasturlash asoslari", author: "M. Lutz", due: "18 Iyun 2026", status: "due_soon" },
-];
-
-const RESERVATIONS = [
-  { room: { uz: "Asosiy o'quv zali", ru: "Главный читальный зал", en: "Main Reading Room", tr: "Ana Okuma Salonu" }, date: "2026-06-20", time: "10:00–14:00", seat: "A-14", status: "confirmed" },
-];
-
-const AI_RECS = [
-  { title: "Clean Code", author: "Robert C. Martin", reason: { uz: "Dasturlash yo'nalishingizga mos", ru: "Подходит для вашего направления", en: "Matches your direction", tr: "Yöneliminize uygun" } },
-  { title: "Design Patterns", author: "Gang of Four", reason: { uz: "2-kurs talabalariga tavsiya etiladi", ru: "Рекомендуется для 2-го курса", en: "Recommended for 2nd year", tr: "2. sınıf için önerilir" } },
-  { title: "Raqamli iqtisodiyot asoslari", author: "A. Axmedov", reason: { uz: "Fakultet tavsiyasi", ru: "Рекомендация факультета", en: "Faculty recommendation", tr: "Fakülte tavsiyesi" } },
-];
+import {
+  studentProfile,
+} from "@/data/seedProfiles";
+import {
+  studentDashboardStats,
+  studentLoans,
+  reservations,
+  readingRoomBookings,
+  aiRecommendations,
+} from "@/data/seedDashboard";
+import { notifications } from "@/data/seedLibrary";
 
 const TABS = [
-  { key: "overview", icon: <User size={14} />, label: { uz: "Umumiy", ru: "Обзор", en: "Overview", tr: "Genel" } },
-  { key: "books", icon: <BookOpen size={14} />, label: { uz: "Kitoblarim", ru: "Мои книги", en: "My Books", tr: "Kitaplarım" } },
-  { key: "rooms", icon: <CalendarCheck size={14} />, label: { uz: "Bronlar", ru: "Брони", en: "Bookings", tr: "Rezervasyonlar" } },
-  { key: "ai", icon: <Brain size={14} />, label: { uz: "AI tavsiyalar", ru: "ИИ рекомендации", en: "AI Recs", tr: "AI Önerileri" } },
+  { key: "overview", label: "Umumiy ko'rinish", icon: TrendingUp },
+  { key: "books", label: "Kitoblarim", icon: BookOpen },
+  { key: "rooms", label: "O'quv zali", icon: Calendar },
+  { key: "ai", label: "AI tavsiyalar", icon: Bot },
 ];
 
+const STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: any }> = {
+  active: { label: "Faol", color: "text-green-700", bg: "bg-green-100", icon: CheckCircle },
+  due_soon: { label: "Muddati yaqin", color: "text-amber-700", bg: "bg-amber-100", icon: AlertTriangle },
+  due_today: { label: "Bugun qaytariladi", color: "text-red-700", bg: "bg-red-100", icon: AlertCircle },
+  overdue: { label: "Muddati o'tgan", color: "text-red-700", bg: "bg-red-100", icon: AlertCircle },
+  approved: { label: "Tasdiqlangan", color: "text-green-700", bg: "bg-green-100", icon: CheckCircle },
+  pending: { label: "Kutilmoqda", color: "text-amber-700", bg: "bg-amber-100", icon: Clock },
+};
+
+const COVER_COLORS = ["#0069A8", "#2563EB", "#7C3AED", "#0891B2", "#065F46", "#92400E"];
+
 export default function StudentProfile() {
-  const locale = useLocale() as Locale;
   const [tab, setTab] = useState("overview");
-  const t = (obj: Record<string, string>) => obj[locale] || obj.uz;
+
+  const profile = studentProfile;
+  const stats = studentDashboardStats;
+  const loans = studentLoans;
+  const resv = reservations;
+  const rooms = readingRoomBookings;
+  const recs = aiRecommendations;
+  const notifs = notifications;
+
+  const KPI = [
+    { icon: BookOpen, val: stats.active_loans, label: "Faol kitoblar", color: "text-[#0069A8]", bg: "bg-blue-50" },
+    { icon: AlertTriangle, val: stats.due_soon, label: "Muddati yaqin", color: "text-amber-600", bg: "bg-amber-50" },
+    { icon: BookMarked, val: stats.reservations, label: "Bronlar", color: "text-emerald-600", bg: "bg-emerald-50" },
+    { icon: Calendar, val: stats.reading_room_bookings, label: "O'quv zali", color: "text-purple-600", bg: "bg-purple-50" },
+    { icon: Bot, val: stats.ai_recommendations, label: "AI tavsiyalar", color: "text-indigo-600", bg: "bg-indigo-50" },
+    { icon: Bell, val: stats.notifications, label: "Bildirishnomalar", color: "text-orange-600", bg: "bg-orange-50" },
+  ];
 
   return (
     <div className="min-h-screen" style={{ background: "#F4F7FB" }}>
-      {/* Profile header */}
-      <div style={{ background: "linear-gradient(135deg,#002B4A 0%,#0069A8 100%)", paddingBottom: "60px" }}>
-        <div className="max-w-[1100px] mx-auto px-5 sm:px-8 pt-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <div className="w-20 h-20 rounded-2xl bg-[#F5B400] flex items-center justify-center text-[#002B4A] font-black text-3xl flex-shrink-0">
-              {MOCK_STUDENT.name.charAt(0)}
+      {/* ===== Profile Header Banner ===== */}
+      <div style={{ background: "linear-gradient(135deg,#002B4A 0%,#003D66 60%,#005A91 100%)" }} className="pb-12 pt-8">
+        <div className="max-w-[1100px] mx-auto px-5 sm:px-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            {/* Avatar */}
+            <div className="relative">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center font-black text-[28px] sm:text-[32px] text-white flex-shrink-0"
+                style={{ background: "linear-gradient(135deg,#0069A8,#F5B400)" }}>
+                {profile.avatar_initials}
+              </div>
+              {profile.face_id_active && (
+                <div className="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-green-400 rounded-xl flex items-center justify-center border-2 border-[#002B4A]">
+                  <Fingerprint size={13} className="text-white" />
+                </div>
+              )}
             </div>
+
+            {/* Info */}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="badge badge-gold">{locale === "uz" ? "Talaba" : locale === "ru" ? "Студент" : "Student"}</span>
-                <span className="badge badge-blue">{MOCK_STUDENT.group}</span>
-                <span className="badge badge-green">GPA {MOCK_STUDENT.gpa}</span>
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest bg-[#F5B400] text-[#002B4A]">Talaba</span>
+                <span className="text-white/40 text-[11px]">{profile.student_id}</span>
               </div>
-              <h1 className="text-white font-black text-[22px] sm:text-[26px] leading-tight">{MOCK_STUDENT.name}</h1>
-              <div className="text-white/55 text-[13px] mt-1 flex flex-wrap gap-x-4 gap-y-1">
-                <span>{MOCK_STUDENT.student_id}</span>
-                <span>{t(MOCK_STUDENT.faculty)}</span>
-                <span>{MOCK_STUDENT.course}-{locale === "uz" ? "kurs" : locale === "ru" ? "курс" : "th year"}</span>
+              <h1 className="text-white font-black text-[22px] sm:text-[26px] leading-tight">{profile.full_name}</h1>
+              <p className="text-white/55 text-[13px] mt-0.5">{profile.direction}</p>
+              <div className="flex flex-wrap items-center gap-3 mt-3">
+                <span className="flex items-center gap-1.5 text-white/50 text-[11.5px]">
+                  <GraduationCap size={12} /> {profile.faculty}
+                </span>
+                <span className="flex items-center gap-1.5 text-white/50 text-[11.5px]">
+                  <User size={12} /> {profile.group} · {profile.course}
+                </span>
+                <span className="flex items-center gap-1.5 text-white/50 text-[11.5px]">
+                  <Star size={12} className="text-[#F5B400]" /> GPA {profile.gpa}
+                </span>
               </div>
             </div>
-          </div>
 
-          {/* Tab bar */}
-          <div className="flex gap-1 mt-8 overflow-x-auto pb-1">
-            {TABS.map(tb => (
-              <button key={tb.key} onClick={() => setTab(tb.key)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12.5px] font-semibold whitespace-nowrap transition-all ${
-                  tab === tb.key
-                    ? "bg-white text-[#0069A8] shadow-sm"
-                    : "text-white/65 hover:text-white hover:bg-white/12"
-                }`}>
-                {tb.icon}{t(tb.label)}
-              </button>
-            ))}
+            {/* Contact */}
+            <div className="flex flex-col gap-1.5 text-right">
+              <div className="flex items-center gap-2 text-white/50 text-[11.5px] justify-end">
+                <Mail size={11} />{profile.email}
+              </div>
+              <div className="flex items-center gap-2 text-white/50 text-[11.5px] justify-end">
+                <Phone size={11} />{profile.phone}
+              </div>
+              <div className="flex items-center gap-2 text-green-400 text-[11px] justify-end mt-1">
+                <Fingerprint size={10} />Face ID faol
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 -mt-8 pb-16">
+      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 -mt-6 pb-16">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5 mb-6">
+          {KPI.map(({ icon: Icon, val, label, color, bg }) => (
+            <div key={label} className={`${bg} rounded-2xl p-4 text-center`}>
+              <Icon size={18} className={`${color} mx-auto mb-1.5`} />
+              <div className={`text-2xl font-black ${color} leading-none`}>{val}</div>
+              <div className="text-[10px] text-gray-500 mt-1 leading-tight">{label}</div>
+            </div>
+          ))}
+        </div>
 
+        {/* Tabs */}
+        <div className="flex border-b border-gray-200 mb-6 bg-white rounded-t-2xl px-2 pt-2">
+          {TABS.map(({ key, label, icon: Icon }) => (
+            <button key={key} onClick={() => setTab(key)}
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-[12.5px] font-semibold border-b-2 transition-colors rounded-t-xl ${
+                tab === key ? "border-[#0069A8] text-[#0069A8]" : "border-transparent text-gray-400 hover:text-gray-600"
+              }`}>
+              <Icon size={13} />{label}
+            </button>
+          ))}
+        </div>
+
+        {/* ===== OVERVIEW TAB ===== */}
         {tab === "overview" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            {/* Personal info */}
-            <div className="lg:col-span-2 profile-card p-6">
-              <h3 className="font-bold text-[#002B4A] text-[15px] mb-4 flex items-center gap-2">
-                <User size={16} className="text-[#0069A8]" />
-                {locale === "uz" ? "Shaxsiy ma'lumotlar" : locale === "ru" ? "Личные данные" : "Personal Info"}
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { label: { uz: "Fakultet", ru: "Факультет", en: "Faculty", tr: "Fakülte" }, val: t(MOCK_STUDENT.faculty) },
-                  { label: { uz: "Kafedra", ru: "Кафедра", en: "Department", tr: "Bölüm" }, val: t(MOCK_STUDENT.department) },
-                  { label: { uz: "Yo'nalish", ru: "Направление", en: "Direction", tr: "Yönelim" }, val: t(MOCK_STUDENT.direction) },
-                  { label: { uz: "Guruh", ru: "Группа", en: "Group", tr: "Grup" }, val: MOCK_STUDENT.group },
-                  { label: { uz: "Kurs", ru: "Курс", en: "Year", tr: "Yıl" }, val: `${MOCK_STUDENT.course}` },
-                  { label: { uz: "O'rtacha ball", ru: "Средний балл", en: "GPA", tr: "GPA" }, val: MOCK_STUDENT.gpa },
-                ].map((row, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-[#F4F7FB]">
-                    <div className="text-[10px] font-bold uppercase tracking-wide text-gray-400 mb-1">{t(row.label)}</div>
-                    <div className="text-[13px] font-semibold text-[#102033]">{row.val}</div>
-                  </div>
-                ))}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            {/* Active loans summary */}
+            <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-[#002B4A] text-[15px] flex items-center gap-2">
+                  <BookOpen size={15} className="text-[#0069A8]" />
+                  Faol ijaralar
+                </h3>
+                <button onClick={() => setTab("books")} className="text-[11px] text-[#0069A8] hover:underline">
+                  Barchasini ko'rish →
+                </button>
+              </div>
+              <div className="space-y-3">
+                {loans.map((loan) => {
+                  const st = STATUS_MAP[loan.status] || STATUS_MAP.active;
+                  const StIcon = st.icon;
+                  return (
+                    <div key={loan.id} className="flex items-start gap-3 p-3.5 rounded-xl" style={{ background: "#F4F7FB" }}>
+                      <div className="w-10 h-14 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-[9px] font-bold"
+                        style={{ background: loan.book.cover_color || "#0069A8" }}>
+                        <BookOpen size={14} className="opacity-60" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-[13px] text-[#102033]">{loan.book.title}</div>
+                        <div className="text-gray-400 text-[11px]">{loan.book.author}</div>
+                        <div className="flex items-center gap-1 mt-1.5 text-[11px] text-gray-400">
+                          <Clock size={10} />
+                          {loan.due_date} ga qadar
+                          {loan.days_remaining > 0 && ` · ${loan.days_remaining} kun`}
+                          {loan.days_remaining === 0 && " · Bugun!"}
+                        </div>
+                      </div>
+                      <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${st.bg} ${st.color}`}>
+                        <StIcon size={10} />{st.label}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Quick stats */}
-            <div className="space-y-4">
-              {[
-                { icon: <BookOpen size={18} />, val: "2", label: { uz: "Faol kitoblar", ru: "Активные книги", en: "Active books", tr: "Aktif kitaplar" }, color: "#0069A8" },
-                { icon: <CalendarCheck size={18} />, val: "1", label: { uz: "O'quv zali broni", ru: "Бронь зала", en: "Room booking", tr: "Salon rezervasyonu" }, color: "#00A050" },
-                { icon: <Brain size={18} />, val: "3", label: { uz: "AI tavsiyalar", ru: "ИИ рекомендации", en: "AI recommendations", tr: "AI önerileri" }, color: "#8855CC" },
-                { icon: <Star size={18} />, val: MOCK_STUDENT.gpa, label: { uz: "GPA", ru: "GPA", en: "GPA", tr: "GPA" }, color: "#F5B400" },
-              ].map((s, i) => (
-                <div key={i} className="profile-card p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white flex-shrink-0" style={{ background: s.color }}>
-                    {s.icon}
-                  </div>
-                  <div>
-                    <div className="font-black text-[20px] text-[#102033] leading-none">{s.val}</div>
-                    <div className="text-gray-400 text-[11px] mt-0.5">{t(s.label)}</div>
-                  </div>
+            {/* Right column */}
+            <div className="lg:col-span-2 space-y-4">
+              {/* Notifications */}
+              <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+                <h3 className="font-bold text-[#002B4A] text-[14px] mb-3 flex items-center gap-2">
+                  <Bell size={13} className="text-[#0069A8]" />
+                  Bildirishnomalar
+                </h3>
+                <div className="space-y-2.5">
+                  {notifs.map((n) => (
+                    <div key={n.id} className={`p-3 rounded-xl text-[11.5px] leading-snug border ${
+                      n.type === "warning" ? "bg-amber-50 border-amber-100 text-amber-800"
+                      : n.type === "success" ? "bg-green-50 border-green-100 text-green-800"
+                      : "bg-blue-50 border-blue-100 text-blue-800"
+                    }`}>
+                      <div>{n.text}</div>
+                      <div className="text-[9px] opacity-60 mt-1">{n.time}</div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Profile details */}
+              <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+                <h3 className="font-bold text-[#002B4A] text-[14px] mb-3">Profil ma'lumotlari</h3>
+                <div className="space-y-2">
+                  {[
+                    { label: "Talaba ID", val: profile.student_id },
+                    { label: "Kirish yili", val: `${profile.enrollment_year}-yil` },
+                    { label: "Stipendiya", val: profile.scholarship },
+                    { label: "GPA", val: `${profile.gpa} / 5.0` },
+                  ].map(r => (
+                    <div key={r.label} className="flex justify-between text-[11.5px] border-b border-gray-50 pb-1.5">
+                      <span className="text-gray-400">{r.label}</span>
+                      <span className="font-semibold text-gray-700">{r.val}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
 
+        {/* ===== BOOKS TAB ===== */}
         {tab === "books" && (
-          <div className="profile-card">
-            <div className="p-5 border-b border-gray-100 flex items-center gap-2">
-              <BookOpen size={16} className="text-[#0069A8]" />
-              <h3 className="font-bold text-[#002B4A] text-[15px]">
-                {locale === "uz" ? "Faol kitoblar" : locale === "ru" ? "Активные книги" : "Active Books"}
-              </h3>
-            </div>
-            {ACTIVE_LOANS.length === 0 ? (
-              <div className="p-10 text-center text-gray-400">{locale === "uz" ? "Faol kitob yo'q" : "Нет активных книг"}</div>
-            ) : (
+          <div className="space-y-5">
+            {/* Active loans table */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h3 className="font-bold text-[#002B4A] text-[15px]">Faol ijaralar ({loans.length})</h3>
+              </div>
               <div className="divide-y divide-gray-50">
-                {ACTIVE_LOANS.map((loan, i) => (
-                  <div key={i} className="p-5 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#0069A8]/10 flex items-center justify-center flex-shrink-0">
-                      <BookOpen size={18} className="text-[#0069A8]" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[#102033] text-[14px]">{loan.title}</div>
-                      <div className="text-gray-400 text-[12px] mt-0.5">{loan.author}</div>
-                      <div className={`flex items-center gap-1.5 mt-1.5 text-[11px] font-semibold ${loan.status === "due_soon" ? "text-orange-600" : "text-green-600"}`}>
-                        {loan.status === "due_soon" ? <AlertCircle size={11} /> : <Clock size={11} />}
-                        {locale === "uz" ? "Qaytarish:" : "Вернуть:"} {loan.due}
+                {loans.map((loan) => {
+                  const st = STATUS_MAP[loan.status];
+                  const StIcon = st.icon;
+                  return (
+                    <div key={loan.id} className="flex items-start gap-4 px-6 py-4">
+                      <div className="w-10 h-14 rounded-xl flex items-center justify-center flex-shrink-0"
+                        style={{ background: loan.book.cover_color || "#0069A8" }}>
+                        <BookOpen size={14} className="text-white/70" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-[13.5px] text-[#102033]">{loan.book.title}</div>
+                        <div className="text-gray-400 text-[11.5px]">{loan.book.author}</div>
+                        <div className="flex items-center gap-4 mt-2 text-[11px] text-gray-400">
+                          <span>Olingan: {loan.borrowed_date}</span>
+                          <span>Qaytarish: {loan.due_date}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>
+                          <StIcon size={10} />{st.label}
+                        </span>
+                        {loan.days_remaining > 0
+                          ? <span className="text-gray-400 text-[11px]">{loan.days_remaining} kun qoldi</span>
+                          : <span className="text-red-600 text-[11px] font-bold">Bugun!</span>
+                        }
                       </div>
                     </div>
-                    <span className={`badge ${loan.status === "due_soon" ? "badge-gold" : "badge-green"}`}>
-                      {loan.status === "due_soon" ? (locale === "uz" ? "Yaqin" : "Скоро") : (locale === "uz" ? "OK" : "OK")}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-            )}
+            </div>
+
+            {/* Reservations */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h3 className="font-bold text-[#002B4A] text-[15px]">Band qilingan kitoblar ({resv.length})</h3>
+              </div>
+              <div className="divide-y divide-gray-50">
+                {resv.map((r) => {
+                  const st = STATUS_MAP[r.status];
+                  const StIcon = st.icon;
+                  return (
+                    <div key={r.id} className="flex items-start gap-4 px-6 py-4">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                        <BookMarked size={16} className="text-[#0069A8]" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold text-[13.5px] text-[#102033]">{r.book.title}</div>
+                        <div className="text-gray-400 text-[11.5px]">{r.book.author}</div>
+                        <div className="text-[11px] text-gray-400 mt-1">
+                          Olib ketish: {r.pickup_date} soat {r.pickup_time}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>
+                          <StIcon size={10} />{st.label}
+                        </span>
+                        {r.qr_code && (
+                          <div className="flex items-center gap-1 text-[10px] text-[#0069A8]">
+                            <QrCode size={10} /> QR tayyor
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
 
+        {/* ===== ROOMS TAB ===== */}
         {tab === "rooms" && (
-          <div className="profile-card">
-            <div className="p-5 border-b border-gray-100 flex items-center gap-2">
-              <CalendarCheck size={16} className="text-[#0069A8]" />
-              <h3 className="font-bold text-[#002B4A] text-[15px]">
-                {locale === "uz" ? "O'quv zali bronlari" : locale === "ru" ? "Брони читального зала" : "Reading Room Bookings"}
-              </h3>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="font-bold text-[#002B4A] text-[15px]">O'quv zali bronlari ({rooms.length})</h3>
+              <Link href="/library/reading-room"
+                className="flex items-center gap-1.5 px-4 py-2 bg-[#0069A8] text-white rounded-xl text-[12px] font-bold hover:opacity-90 transition-opacity">
+                <Calendar size={13} /> Yangi bron
+              </Link>
             </div>
             <div className="divide-y divide-gray-50">
-              {RESERVATIONS.map((r, i) => (
-                <div key={i} className="p-5 flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
-                    <CalendarCheck size={18} className="text-green-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-[#102033] text-[14px]">{t(r.room)}</div>
-                    <div className="text-gray-400 text-[12px] mt-1">
-                      {r.date} · {r.time} · {locale === "uz" ? "O'rindiq" : "Место"}: <strong className="text-[#0069A8]">{r.seat}</strong>
+              {rooms.map((room) => {
+                const st = STATUS_MAP[room.status];
+                const StIcon = st.icon;
+                return (
+                  <div key={room.id} className="flex items-start gap-4 px-6 py-5">
+                    <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                      <Calendar size={20} className="text-purple-600" />
                     </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-[14px] text-[#102033]">{room.room}</div>
+                      <div className="flex items-center gap-4 mt-1.5 text-[12px] text-gray-500">
+                        <span>O'rindiq: <strong>{room.seat}</strong></span>
+                        <span>Sana: <strong>{room.date}</strong></span>
+                        <span>Vaqt: <strong>{room.time_from}–{room.time_to}</strong></span>
+                      </div>
+                    </div>
+                    <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${st.bg} ${st.color}`}>
+                      <StIcon size={10} />{st.label}
+                    </span>
                   </div>
-                  <span className="badge badge-green">
-                    <CheckCircle size={10} />
-                    {locale === "uz" ? "Tasdiqlangan" : locale === "ru" ? "Подтверждено" : "Confirmed"}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
-            <div className="p-4">
-              <Link href="/library/reading-room"
-                className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-semibold text-white"
-                style={{ background: "#0069A8" }}>
-                {locale === "uz" ? "Yangi bron qo'shish" : locale === "ru" ? "Добавить бронь" : "New Booking"}
-                <ChevronRight size={14} />
-              </Link>
+            <div className="px-6 py-4 bg-blue-50 border-t border-blue-100">
+              <p className="text-[12px] text-blue-600">
+                O'quv zali bronlari kutubxona ish vaqtida tasdiqlash talab qiladi. QR kodingiz bronlashdan so'ng yuboriladi.
+              </p>
             </div>
           </div>
         )}
 
+        {/* ===== AI TAB ===== */}
         {tab === "ai" && (
-          <div className="profile-card">
-            <div className="p-5 border-b border-gray-100 flex items-center gap-2">
-              <Brain size={16} className="text-purple-600" />
-              <h3 className="font-bold text-[#002B4A] text-[15px]">
-                {locale === "uz" ? "AI kutubxonachi tavsiyalari" : locale === "ru" ? "Рекомендации ИИ-библиотекаря" : "AI Librarian Recommendations"}
-              </h3>
+          <div>
+            <div className="flex items-center gap-3 mb-5 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
+              <Bot size={18} className="text-indigo-600 flex-shrink-0" />
+              <p className="text-[12.5px] text-indigo-700">
+                AI kutubxonachi sizning o'qiyotgan fanlari va ijaraga olingan kitoblar asosida {recs.length} ta resurs tavsiya qildi.
+              </p>
             </div>
-            <div className="p-4 space-y-3">
-              {AI_RECS.map((rec, i) => (
-                <div key={i} className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 transition-all">
-                  <div className="w-9 h-9 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
-                    <BookMarked size={16} className="text-purple-600" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recs.map((rec) => (
+                <div key={rec.id} className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                      <BookOpen size={16} className="text-indigo-600" />
+                    </div>
+                    <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                      {rec.match_percent}% mos
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-[#102033] text-[13.5px]">{rec.title}</div>
-                    <div className="text-gray-400 text-[11px]">{rec.author}</div>
-                    <div className="text-purple-600 text-[11px] mt-1 font-medium">{t(rec.reason)}</div>
+                  <h4 className="font-bold text-[13px] text-[#102033] mb-1 leading-snug">{rec.title}</h4>
+                  <p className="text-gray-400 text-[11px] mb-1">{rec.subject}</p>
+                  <p className="text-gray-300 text-[10.5px] mb-4">{rec.department}</p>
+                  <div className="flex gap-2">
+                    <button className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-[#0069A8] text-white rounded-xl text-[11px] font-semibold hover:opacity-90 transition-opacity">
+                      <ExternalLink size={11} />Ko'rish
+                    </button>
+                    <button className="flex items-center justify-center gap-1.5 px-3 py-2 border border-gray-200 rounded-xl text-[11px] font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+                      <Download size={11} />
+                    </button>
                   </div>
-                  <Link href="/catalog" className="text-[11px] font-semibold text-[#0069A8] hover:underline whitespace-nowrap">
-                    {locale === "uz" ? "Ko'rish" : locale === "ru" ? "Смотреть" : "View"}
-                  </Link>
                 </div>
               ))}
-              <Link href="/ai"
-                className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-semibold text-white mt-2"
-                style={{ background: "linear-gradient(135deg,#6B46C1,#9333EA)" }}>
-                <Brain size={14} />
-                {locale === "uz" ? "AI kutubxonachiga o'tish" : locale === "ru" ? "Открыть ИИ-библиотекарь" : "Open AI Librarian"}
-              </Link>
             </div>
           </div>
         )}

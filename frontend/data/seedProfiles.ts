@@ -1,0 +1,30 @@
+export const studentProfile = {
+  id: 142,
+  student_id: "ATMU-ST-2026-0142",
+  full_name: "Jasurbek Karimov",
+  avatar_initials: "JK",
+  email: "student@atmu.uz",
+  phone: "+998 90 123 45 67",
+  faculty: "Raqamli texnologiyalar fakulteti",
+  direction: "Axborot tizimlari va texnologiyalari",
+  course: "2-kurs",
+  group: "AT-22-01",
+  gpa: 4.1,
+  face_id_active: true,
+  enrollment_year: 2022,
+  scholarship: "Davlat granti",
+};
+
+export const teacherProfile = {
+  id: 28,
+  full_name: "Dilshod Rahimov",
+  avatar_initials: "DR",
+  email: "teacher@atmu.uz",
+  phone: "+998 91 222 33 44",
+  department: "Axborot texnologiyalari kafedrasi",
+  position: "Katta o'qituvchi",
+  degree: "PhD",
+  subjects: ["Ma'lumotlar bazasi", "Web dasturlash", "Algoritmlar"],
+  experience_years: 8,
+  publications_count: 14,
+};
